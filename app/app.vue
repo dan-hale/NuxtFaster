@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+  <NuxtRouteAnnouncer />
+  <VercelAnalytics />
+  <VercelSpeedInsights />
+  <AppToaster />
+  <WelcomeToast />
 </template>

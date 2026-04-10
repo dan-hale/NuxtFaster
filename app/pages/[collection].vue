@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import type { Category, Collection } from "~~/db/schema";
+
+definePageMeta({ shopChrome: true });
+
+const route = useRoute();
+const slug = computed(() => decodeURIComponent(String(route.params.collection)));
+
+type CollectionRow = Collection & { categories: Category[] };
+
+const { data: rows } = await useFetch<CollectionRow[]>(
+  () => `/api/collection/${encodeURIComponent(slug.value)}`,
+  {
+    key: () => `collection-page-${slug.value}`,
+    watch: [slug],
+    onResponseError({ response }) {
+      if (response.status === 404) {
+        showError({
+          statusCode: 404,
+          statusMessage: "Collection not found",
+          fatal: true,
+        });
+      }
+    },
+  },
+);
+
+useSeoMeta({
+  title: () => rows.value?.[0]?.name ?? "Collection",
+});
+</script>
+
+<template>
+  <div class="w-full p-4">
+    <div v-if="rows?.length">
+      <div v-for="(collection, coli) in rows" :key="collection.name">
+        <h2 class="text-xl font-semibold">
+          {{ collection.name }}
+        </h2>
+        <div
+          class="flex flex-row flex-wrap justify-center gap-2 border-b-2 py-4 sm:justify-start"
+        >
+          <AppLink
+            v-for="(category, ci) in collection.categories"
+            :key="category.name"
+            class="flex w-[125px] flex-col items-center text-center"
+            :to="`/products/${category.slug}`"
+          >
+            <img
+              :loading="coli + ci < 15 ? 'eager' : 'lazy'"
+              decoding="sync"
+              :src="category.image_url ?? '/placeholder.svg'"
+              :alt="`A small picture of ${category.name}`"
+              class="mb-2 h-14 w-14 border hover:bg-accent2"
+              width="48"
+              height="48"
+            >
+            <span class="text-xs">{{ category.name }}</span>
+          </AppLink>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -7,14 +7,42 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@antfu/eslint-config": "^8.1.1",
+    "@fontsource/geist-mono": "^5.1.0",
+    "@fontsource/geist-sans": "^5.1.0",
+    "@neondatabase/serverless": "^1.0.2",
+    "@nuxt/eslint": "1.15.2",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@upstash/ratelimit": "^2.0.3",
+    "@upstash/redis": "^1.35.6",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
+    "@vueuse/nuxt": "^14.2.1",
+    "bcryptjs": "^2.4.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.2",
+    "jose": "^5.9.4",
+    "linkedom": "^0.18.5",
+    "lucide-vue-next": "^0.469.0",
     "nuxt": "^4.4.2",
+    "reka-ui": "^2.9.5",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7",
     "vue": "^3.5.32",
-    "vue-router": "^5.0.4"
+    "vue-router": "^5.0.4",
+    "vue-sonner": "^2.0.9",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "drizzle-kit": "^0.31.10",
     "prettier": "^3.8.2"
   }
 }
