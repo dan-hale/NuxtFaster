@@ -26,6 +26,16 @@ export default defineNuxtConfig({
     domains: ['localhost', '127.0.0.1', 'bevgyjm5apuichhj.public.blob.vercel-storage.com'],
     format: ['webp', 'avif', 'jpeg'],
     quality: 80,
+    screens: {
+      search: 40,
+      thumb: 48,
+      product: 256,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536,
+    },
   },
   css: ['~/assets/css/main.css'],
   nitro: {
