@@ -1,17 +1,14 @@
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
-import * as schema from "~~/db/schema";
+import { env } from 'node:process'
+import { neon } from '@neondatabase/serverless'
+import { drizzle } from 'drizzle-orm/neon-http'
+import * as schema from '~~/db/schema'
 
-let dbInstance: ReturnType<typeof drizzle<typeof schema>> | null = null;
+if (!env.DATABASE_URL)
+  throw new Error('POSTGRES_URL is not set')
+
+const sql = neon(env.DATABASE_URL)
+const dbInstance = drizzle({ client: sql, schema })
 
 export function useDb() {
-  if (dbInstance) return dbInstance;
-  const config = useRuntimeConfig();
-  const url = config.databaseUrl as string;
-  if (!url) {
-    throw new Error("DATABASE_URL / NUXT_DATABASE_URL is not set");
-  }
-  const sql = neon(url);
-  dbInstance = drizzle({ client: sql, schema });
-  return dbInstance;
+  return dbInstance
 }
