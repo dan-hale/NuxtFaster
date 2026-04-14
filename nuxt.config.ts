@@ -43,6 +43,15 @@ export default defineNuxtConfig({
       interval: 15 * 60 * 1000,
       ipHeader: 'x-real-ip',
     },
+    headers: {
+      contentSecurityPolicy: {
+        'img-src': [
+          "'self'",
+          'data:',
+          'https://bevgyjm5apuichhj.public.blob.vercel-storage.com',
+        ],
+      },
+    },
   },
   /** CDN/browser cache hints for public GET APIs. Hot DB reads use Nitro `defineCachedFunction` (see server/utils/queries.ts). */
   routeRules: {
