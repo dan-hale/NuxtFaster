@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Menu } from "lucide-vue-next";
+import { Menu } from 'lucide-vue-next'
 
-const route = useRoute();
+const route = useRoute()
 
-const showShopSidebar = computed(() => Boolean(route.meta.shopChrome));
+const showShopSidebar = computed(() => Boolean(route.meta.shopChrome))
 
-const { data: collections } = await useFetch("/api/collections", {
-  key: "collections",
-});
+const { data: collections } = await useFetch('/api/collections', {
+  key: 'collections',
+})
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const { data: collections } = await useFetch("/api/collections", {
               <div class="mx-0 flex-grow sm:mx-auto sm:flex-grow-0">
                 <SearchDropdown />
               </div>
-              <div class="flex flex-row justify-between space-x-4">
+              <div class="flex flex-row justify-between gap-4">
                 <div class="relative">
                   <AppLink
                     to="/order"
