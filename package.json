@@ -22,6 +22,7 @@
     "@nuxt/image": "2.0.0",
     "@nuxtjs/seo": "^5.1.3",
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@takumi-rs/core": "^1.0.9",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "@vueuse/nuxt": "^14.2.1",
