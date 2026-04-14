@@ -1,86 +1,105 @@
 <script setup lang="ts">
+import type { PrefetchedPageImage } from '~~/server/types/prefetched-page-image'
+
 const props = withDefaults(
   defineProps<{
-    to: string;
-    prefetch?: boolean;
-    class?: string;
+    to: string
+    prefetch?: boolean
   }>(),
   { prefetch: true },
-);
+)
 
-const wrap = ref<HTMLElement | null>(null);
-const imageCache = useState<Record<string, Awaited<ReturnType<typeof $fetch>>>>(
-  "link-image-prefetch",
+const anchorRef = useTemplateRef<HTMLAnchorElement>('anchorRef')
+const imageCache = useState<Record<string, PrefetchedPageImage[]>>(
+  'link-image-prefetch',
   () => ({}),
-);
+)
 
 async function prefetchImages() {
-  const href = props.to;
-  if (!href.startsWith("/") || href.startsWith("/order") || href === "/") {
-    return;
+  const href = props.to
+  if (!href.startsWith('/') || href.startsWith('/order') || href === '/') {
+    return
   }
-  if (imageCache.value[href]) return;
+  if (imageCache.value[href])
+    return
   try {
     const origin = import.meta.client
       ? window.location.origin
-      : useRequestURL().origin;
-    const u = new URL(href, origin);
-    const res = await $fetch<{ images: PrefetchImg[] }>(
-      `/api/prefetch-images${u.pathname}`,
-    );
-    imageCache.value[href] = res.images;
-  } catch {
+      : useRequestURL().origin
+    const u = new URL(href, origin)
+    const res = await $fetch(`/api/prefetch-images${u.pathname}`)
+    imageCache.value[href] = res.images
+  }
+  catch {
     /* ignore */
   }
 }
 
-type PrefetchImg = {
-  srcset?: string | null;
-  sizes?: string | null;
-  src?: string | null;
-  alt?: string | null;
-  loading?: string | null;
-};
-
 function applyPrefetchImages() {
-  const images = imageCache.value[props.to] as PrefetchImg[] | undefined;
-  if (!images) return;
+  const images = imageCache.value[props.to]
+  if (!images)
+    return
   for (const image of images) {
-    if (image.loading === "lazy" || !image.srcset) continue;
-    const img = new Image();
-    img.decoding = "async";
-    (img as HTMLImageElement & { fetchPriority?: string }).fetchPriority =
-      "low";
-    if (image.sizes) img.sizes = image.sizes;
-    img.srcset = image.srcset;
-    if (image.src) img.src = image.src;
-    if (image.alt) img.alt = image.alt;
+    if (image.loading === 'lazy' || !image.srcset)
+      continue
+    const img = new Image()
+    img.decoding = 'async';
+    (img as HTMLImageElement & { fetchPriority?: string }).fetchPriority
+      = 'low'
+    if (image.sizes)
+      img.sizes = image.sizes
+    img.srcset = image.srcset
+    if (image.src)
+      img.src = image.src
+    if (image.alt)
+      img.alt = image.alt
   }
 }
 
 onMounted(() => {
-  if (!wrap.value || props.prefetch === false) return;
+  if (!anchorRef.value || props.prefetch === false)
+    return
   const { stop } = useIntersectionObserver(
-    wrap,
+    anchorRef,
     ([entry]) => {
       if (entry?.isIntersecting) {
         setTimeout(() => {
-          void prefetchImages();
-          stop();
-        }, 300);
+          void prefetchImages()
+          stop()
+        }, 300)
       }
     },
     { threshold: 0.1 },
-  );
-});
+  )
+})
+
+/**
+ * `navigate` on pointerdown already runs Vue Router's `guardEvent` (modifiers, non-primary button, `_blank`, etc.).
+ * Mouse then fires a redundant `click` on the `<a>` — cancel it. Keyboard activation uses `click` with `detail === 0`.
+ */
+function onAnchorClick(
+  e: MouseEvent,
+  navigate: (e?: MouseEvent) => void | Promise<unknown>,
+) {
+  if (e.detail === 0)
+    void navigate(e)
+  else e.preventDefault()
+}
 </script>
 
 <template>
-  <div ref="wrap" class="contents">
-    <NuxtLink
-      :to="to"
-      :prefetch="prefetch !== false"
-      :class="class"
+  <NuxtLink
+    v-slot="{ href, navigate }"
+    :to="to"
+    :prefetch
+    custom
+  >
+    <a
+      ref="anchorRef"
+      v-bind="$attrs"
+      :href="href"
+      @pointerdown="navigate"
+      @click="onAnchorClick($event, navigate)"
       @mouseenter="
         () => {
           void prefetchImages().then(() => applyPrefetchImages());
@@ -88,12 +107,6 @@ onMounted(() => {
       "
     >
       <slot />
-    </NuxtLink>
-  </div>
+    </a>
+  </NuxtLink>
 </template>
-
-<style scoped>
-.contents {
-  display: contents;
-}
-</style>
