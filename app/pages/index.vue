@@ -37,15 +37,18 @@ const { data: productCount } = await useFetch<number>("/api/product-count", {
           class="flex w-[125px] flex-col items-center text-center"
           :to="`/products/${category.slug}`"
         >
-          <img
+          <NuxtImg
             loading="lazy"
             decoding="sync"
+            placeholder
+            preload
             :src="category.image_url ?? '/placeholder.svg'"
             :alt="`A small picture of ${category.name}`"
             class="mb-2 h-14 w-14 border hover:bg-accent2"
             width="48"
             height="48"
-          >
+            fit="cover"
+          />
           <span class="text-xs">{{ category.name }}</span>
         </AppLink>
       </div>

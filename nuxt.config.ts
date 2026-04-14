@@ -16,7 +16,13 @@ export default defineNuxtConfig({
     'reka-ui/nuxt',
     '@vercel/analytics',
     '@vercel/speed-insights',
+    '@nuxt/image',
   ],
+  image: {
+    domains: ['localhost', '127.0.0.1', 'bevgyjm5apuichhj.public.blob.vercel-storage.com'],
+    format: ['webp', 'avif', 'jpeg'],
+    quality: 80,
+  },
   css: ['~/assets/css/main.css'],
   /** CDN/browser cache hints for public GET APIs. DB reads also use in-process `withCache` (see server/utils/cache.ts). */
   routeRules: {

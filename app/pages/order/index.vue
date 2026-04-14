@@ -3,8 +3,6 @@ import { X } from "lucide-vue-next";
 
 definePageMeta({ shopChrome: false });
 
-type Me = { id: number; username: string } | null;
-
 type CartLine = {
   slug: string;
   name: string;
@@ -25,9 +23,7 @@ const { data: items, refresh: refreshItems } = useFetch<CartLine[]>("/api/cart/i
   default: () => [],
 });
 
-const { data: me } = useFetch<Me>("/api/me", {
-  key: "me",
-});
+const { data: me, pending: mePending } = useMe();
 
 const total = computed(() => {
   const list = items.value ?? [];
@@ -86,15 +82,18 @@ async function removeLine(productSlug: string) {
                 >
                   <div class="flex flex-row space-x-2">
                     <div class="flex h-24 w-24 items-center justify-center bg-gray-100">
-                      <img
+                      <NuxtImg
                         loading="eager"
                         decoding="sync"
+                        placeholder
+                        :preload="{ fetchPriority: 'low' }"
                         :src="item.image_url ?? '/placeholder.svg'"
                         alt="Product"
                         width="256"
                         height="256"
                         class="max-h-full max-w-full object-contain"
-                      >
+                        fit="contain"
+                      />
                     </div>
                     <div class="max-w-[100px] flex-grow sm:max-w-full">
                       <h2 class="font-semibold">
@@ -145,7 +144,11 @@ async function removeLine(productSlug: string) {
               Applicable shipping and tax will be added.
             </p>
           </div>
-          <div v-if="!me" class="space-y-3">
+          <div v-if="mePending" class="space-y-2" aria-busy="true">
+            <div class="h-4 w-44 animate-pulse rounded bg-gray-200/80" />
+            <div class="h-32 max-w-xs animate-pulse rounded bg-gray-200/60" />
+          </div>
+          <div v-else-if="!me" class="space-y-3">
             <p class="font-semibold text-accent1">
               Log in to place an order
             </p>
