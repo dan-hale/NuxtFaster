@@ -8,7 +8,15 @@ if (!env.DATABASE_URL)
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', '@nuxt/eslint', 'reka-ui/nuxt', '@vercel/analytics', '@vercel/speed-insights'],
+  modules: [
+    'nuxt-auth-utils',
+    '@nuxtjs/tailwindcss',
+    '@vueuse/nuxt',
+    '@nuxt/eslint',
+    'reka-ui/nuxt',
+    '@vercel/analytics',
+    '@vercel/speed-insights',
+  ],
   css: ['~/assets/css/main.css'],
   /** CDN/browser cache hints for public GET APIs. DB reads also use in-process `withCache` (see server/utils/cache.ts). */
   routeRules: {
@@ -21,11 +29,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     databaseUrl: env.DATABASE_URL,
-    authSecret:
-      env.AUTH_SECRET
-      || (env.NODE_ENV === 'production'
-        ? ''
-        : 'development-only-auth-secret-32charsXX'),
     kvRestApiUrl: env.KV_REST_API_URL,
     kvRestApiToken: env.KV_REST_API_TOKEN,
     public: {

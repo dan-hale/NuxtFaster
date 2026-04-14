@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  clearSessionCookie(event);
+  await clearUserSession(event);
   deleteCookie(event, "cart", { path: "/" });
   return { ok: true };
 });

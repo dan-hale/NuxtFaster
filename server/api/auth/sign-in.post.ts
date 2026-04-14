@@ -38,11 +38,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const { user: foundUser } = user[0]!;
-  const ok = await comparePasswords(password, foundUser.passwordHash);
+  const ok = await verifyPassword(foundUser.passwordHash, password);
   if (!ok) {
     return { error: "Invalid username or password. Please try again." };
   }
 
-  await setSession(event, foundUser);
+  await setUserSession(event, {
+    user: { id: foundUser.id, username: foundUser.username },
+    loggedInAt: new Date(),
+  });
   return { ok: true };
 });

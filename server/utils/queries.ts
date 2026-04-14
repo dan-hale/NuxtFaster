@@ -9,26 +9,15 @@ import {
 } from "~~/db/schema";
 import { useDb } from "./db";
 import { withCache } from "./cache";
-import { verifyToken } from "./session";
 
 const REVALIDATE_PRODUCTS = 60 * 60 * 2;
 
 export async function getUser(event: H3Event) {
-  const sessionCookie = getCookie(event, "session");
-  if (!sessionCookie) {
-    return null;
-  }
-
-  const sessionData = await verifyToken(sessionCookie).catch(() => null);
+  const sessionData = await getUserSession(event);
   if (
-    !sessionData ||
     !sessionData.user ||
     typeof sessionData.user.id !== "number"
   ) {
-    return null;
-  }
-
-  if (new Date(sessionData.expires) < new Date()) {
     return null;
   }
 

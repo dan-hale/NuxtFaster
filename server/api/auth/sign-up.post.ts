@@ -46,6 +46,9 @@ export default defineEventHandler(async (event) => {
     return { error: "Failed to create user. Please try again." };
   }
 
-  await setSession(event, createdUser);
+  await setUserSession(event, {
+    user: { id: createdUser.id, username: createdUser.username },
+    loggedInAt: new Date(),
+  });
   return { ok: true };
 });
