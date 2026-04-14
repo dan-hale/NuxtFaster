@@ -113,13 +113,14 @@ function onItemSelect(item: SearchHit, event: Event) {
               <NuxtImg
                 loading="eager"
                 decoding="sync"
-                placeholder
+                :placeholder="NuxtImgPlaceholderDefault"
                 :preload="{ fetchPriority: 'low' }"
                 :src="item.image_url ?? '/placeholder.svg'"
                 alt=""
                 class="h-10 w-10 pr-2"
                 width="40"
                 height="40"
+                sizes="40px"
                 fit="cover"
               />
               <span class="text-sm">{{ item.name }}</span>

@@ -53,12 +53,13 @@ useSeoMeta({
               <NuxtImg
                 loading="eager"
                 decoding="sync"
-                placeholder
+                :placeholder="NuxtImgPlaceholderDefault"
                 :preload="{ fetchPriority: 'low' }"
                 :src="subcategory.image_url ?? '/placeholder.svg'"
                 :alt="`A small picture of ${subcategory.name}`"
                 width="48"
                 height="48"
+                sizes="48px"
                 class="h-12 w-12 flex-shrink-0 object-cover"
                 fit="cover"
               />

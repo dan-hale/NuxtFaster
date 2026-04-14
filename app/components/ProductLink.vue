@@ -24,13 +24,14 @@ const src = computed(
       <NuxtImg
         :loading="loading ?? 'lazy'"
         decoding="sync"
-        placeholder
+        :placeholder="NuxtImgPlaceholderDefault"
         preload
         :src="src"
         :alt="`A small picture of ${product.name}`"
         class="h-auto w-12 flex-shrink-0 object-cover"
         width="48"
         height="48"
+        sizes="48px"
         fit="cover"
       />
     </div>

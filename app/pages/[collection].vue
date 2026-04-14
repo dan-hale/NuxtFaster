@@ -45,13 +45,14 @@ useSeoMeta({
             <NuxtImg
               :loading="coli + ci < 15 ? 'eager' : 'lazy'"
               decoding="sync"
-              placeholder
+              :placeholder="NuxtImgPlaceholderDefault"
               :preload="{ fetchPriority: 'low' }"
               :src="category.image_url ?? '/placeholder.svg'"
               :alt="`A small picture of ${category.name}`"
               class="mb-2 h-14 w-14 border hover:bg-accent2"
-              width="48"
-              height="48"
+              width="56"
+              height="56"
+              sizes="56px"
               fit="cover"
             />
             <span class="text-xs">{{ category.name }}</span>
