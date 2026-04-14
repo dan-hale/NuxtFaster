@@ -133,15 +133,18 @@ function onItemSelect(item: SearchRow, event: SelectEvent<typeof item.slug>) {
             @select="onItemSelect(item, $event)"
           >
             <div class="flex cursor-pointer items-center p-2">
-              <img
+              <NuxtImg
                 loading="eager"
                 decoding="sync"
+                placeholder
+                :preload="{ fetchPriority: 'low' }"
                 :src="item.image_url ?? '/placeholder.svg'"
                 alt=""
                 class="h-10 w-10 pr-2"
                 width="40"
                 height="40"
-              >
+                fit="cover"
+              />
               <span class="text-sm">{{ item.name }}</span>
             </div>
           </ComboboxItem>

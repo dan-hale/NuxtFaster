@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({ shopChrome: true });
+definePageMeta({ shopChrome: true })
 
-const route = useRoute();
-const slug = computed(() => decodeURIComponent(String(route.params.category)));
+const route = useRoute()
+const slug = computed(() => decodeURIComponent(String(route.params.category)))
 
 const { data } = await useFetch(
   () => `/api/category/${encodeURIComponent(slug.value)}`,
@@ -13,17 +13,17 @@ const { data } = await useFetch(
       if (response.status === 404) {
         showError({
           statusCode: 404,
-          statusMessage: "Category not found",
+          statusMessage: 'Category not found',
           fatal: true,
-        });
+        })
       }
     },
   },
-);
+)
 
 useSeoMeta({
-  title: () => data.value?.category?.name ?? "Category",
-});
+  title: () => data.value?.category?.name ?? 'Category',
+})
 </script>
 
 <template>
@@ -50,15 +50,18 @@ useSeoMeta({
             :to="`/products/${route.params.category}/${subcategory.slug}`"
           >
             <div class="py-2">
-              <img
+              <NuxtImg
                 loading="eager"
                 decoding="sync"
+                placeholder
+                :preload="{ fetchPriority: 'low' }"
                 :src="subcategory.image_url ?? '/placeholder.svg'"
                 :alt="`A small picture of ${subcategory.name}`"
                 width="48"
                 height="48"
                 class="h-12 w-12 flex-shrink-0 object-cover"
-              >
+                fit="cover"
+              />
             </div>
             <div class="flex h-16 flex-grow flex-col items-start py-2">
               <div class="text-sm font-medium text-gray-700 group-hover:underline">

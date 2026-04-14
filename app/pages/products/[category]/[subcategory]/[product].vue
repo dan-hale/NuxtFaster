@@ -59,15 +59,18 @@ useSeoMeta({
     </h1>
     <div class="flex flex-col gap-2">
       <div class="flex flex-row gap-2">
-        <img
+        <NuxtImg
           loading="eager"
           decoding="sync"
+          placeholder
           :src="productData.image_url ?? '/placeholder.svg?height=64&width=64'"
           :alt="`A small picture of ${productData.name}`"
           width="256"
           height="256"
           class="h-56 w-56 flex-shrink-0 border-2 md:h-64 md:w-64"
-        >
+          fit="contain"
+          :preload="{ fetchPriority: 'high' }"
+        />
         <p class="flex-grow text-base">
           {{ productData.description }}
         </p>

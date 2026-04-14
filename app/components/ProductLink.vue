@@ -21,15 +21,18 @@ const src = computed(
     :to="`/products/${categorySlug}/${subcategorySlug}/${product.slug}`"
   >
     <div class="py-2">
-      <img
+      <NuxtImg
         :loading="loading ?? 'lazy'"
         decoding="sync"
+        placeholder
+        preload
         :src="src"
         :alt="`A small picture of ${product.name}`"
         class="h-auto w-12 flex-shrink-0 object-cover"
         width="48"
         height="48"
-      >
+        fit="cover"
+      />
     </div>
     <div class="px-2" />
     <div class="flex h-26 flex-grow flex-col items-start py-2">
