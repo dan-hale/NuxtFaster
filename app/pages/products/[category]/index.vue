@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ shopChrome: true })
+definePageMeta({ shopChrome: true, keepalive: true })
 
 const route = useRoute()
 const slug = computed(() => decodeURIComponent(String(route.params.category)))

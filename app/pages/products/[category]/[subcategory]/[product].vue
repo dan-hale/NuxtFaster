@@ -1,5 +1,6 @@
 <script setup lang="ts">
-definePageMeta({ shopChrome: true });
+definePageMeta({ shopChrome: true, keepalive: true })
+
 
 const route = useRoute();
 const productSlug = computed(() =>
