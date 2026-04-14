@@ -14,7 +14,7 @@ export interface SearchHit {
   subcategory_slug: string
 };
 
-export default defineEventHandler(async (event): Promise<SearchHit[]> => {
+export default defineCachedEventHandler(async (event): Promise<SearchHit[]> => {
   const { q: rawQ } = await getValidatedQuery(event, (query: unknown) =>
     searchQuerySchema.parse({
       q:
@@ -86,4 +86,4 @@ export default defineEventHandler(async (event): Promise<SearchHit[]> => {
   }).filter((x): x is NonNullable<typeof x> => x !== null)
 
   return searchResults
-})
+}, { maxAge: 60, swr: true, name: "api-search" })
