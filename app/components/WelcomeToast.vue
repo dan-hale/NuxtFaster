@@ -50,7 +50,7 @@ function dismiss() {
       <p class="text-xs leading-relaxed text-muted-foreground">
         This demo highlights a full-stack Nuxt site.
         <a
-          href="https://github.com/ethanniser/NextFaster"
+          href="https://github.com/dan-hale/NuxtFaster"
           class="font-semibold text-accent1 hover:underline"
           target="_blank"
           rel="noopener noreferrer"

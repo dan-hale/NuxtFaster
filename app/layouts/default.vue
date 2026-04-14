@@ -125,7 +125,7 @@ const { data: collections } = await useFetch("/api/collections", {
       <div class="text-center sm:text-right">
         By using this website, you agree to check out the
         <a
-          href="https://github.com/ethanniser/NextFaster"
+          href="https://github.com/dan-hale/NuxtFaster"
           class="font-bold text-accent1 hover:underline"
           target="_blank"
           rel="noopener noreferrer"
