@@ -1,114 +1,124 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    compact?: boolean;
+    compact?: boolean
   }>(),
   { compact: false },
-);
+)
 
-const { data: me, refresh: refreshMe } = useFetch("/api/me", {
-  key: "me",
-});
+const { data: me, refresh: refreshMe } = useFetch('/api/me', {
+  key: 'me',
+})
 
-const username = ref("");
-const password = ref("");
-const error = ref<string | null>(null);
-const pending = ref(false);
+const username = ref('')
+const password = ref('')
+const error = ref<string | null>(null)
+const pending = ref(false)
 
 function messageFromAuthFetchError(e: unknown): string {
   const err = e as {
-    data?: { message?: string; statusMessage?: string };
-    statusMessage?: string;
-    message?: string;
-  };
-  const d = err?.data;
-  if (d && typeof d === "object") {
-    const m = d.message ?? d.statusMessage;
-    if (typeof m === "string") return m;
+    data?: { message?: string, statusMessage?: string }
+    statusMessage?: string
+    message?: string
   }
-  if (typeof err?.statusMessage === "string") return err.statusMessage;
-  if (typeof err?.message === "string") return err.message;
-  return "Something went wrong";
+  const d = err?.data
+  if (d && typeof d === 'object') {
+    const m = d.message ?? d.statusMessage
+    if (typeof m === 'string')
+      return m
+  }
+  if (typeof err?.statusMessage === 'string')
+    return err.statusMessage
+  if (typeof err?.message === 'string')
+    return err.message
+  return 'Something went wrong'
 }
 
 async function onSignIn(): Promise<boolean> {
-  pending.value = true;
-  error.value = null;
+  pending.value = true
+  error.value = null
   try {
-    const res = await $fetch("/api/auth/sign-in", {
-      method: "POST",
+    const res = await $fetch('/api/auth/sign-in', {
+      method: 'POST',
       body: { username: username.value, password: password.value },
-    });
-    if ("error" in res && res.error) {
-      error.value =
-        typeof res.error === "string"
+    })
+    if ('error' in res && res.error) {
+      error.value
+        = typeof res.error === 'string'
           ? res.error
-          : res.error.message ?? "Sign in failed";
-      return false;
+          : res.error.message ?? 'Sign in failed'
+      return false
     }
-    username.value = "";
-    password.value = "";
-    await refreshMe();
-    await refreshNuxtData(["cart-badge", "cart-items", "cart-total"]);
-    return true;
-  } catch (e: unknown) {
-    error.value = messageFromAuthFetchError(e);
-    return false;
-  } finally {
-    pending.value = false;
+    username.value = ''
+    password.value = ''
+    await refreshMe()
+    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+    return true
+  }
+  catch (e: unknown) {
+    error.value = messageFromAuthFetchError(e)
+    return false
+  }
+  finally {
+    pending.value = false
   }
 }
 
 async function onSignUp(): Promise<boolean> {
-  pending.value = true;
-  error.value = null;
+  pending.value = true
+  error.value = null
   try {
-    const res = await $fetch("/api/auth/sign-up", {
-      method: "POST",
+    const res = await $fetch('/api/auth/sign-up', {
+      method: 'POST',
       body: { username: username.value, password: password.value },
-    });
-    if ("error" in res && res.error) {
-      error.value =
-        typeof res.error === "string"
+    })
+    if ('error' in res && res.error) {
+      error.value
+        = typeof res.error === 'string'
           ? res.error
-          : res.error.message ?? "Sign up failed";
-      return false;
+          : res.error.message ?? 'Sign up failed'
+      return false
     }
-    username.value = "";
-    password.value = "";
-    await refreshMe();
-    await refreshNuxtData(["cart-badge", "cart-items", "cart-total"]);
-    return true;
-  } catch (e: unknown) {
-    error.value = messageFromAuthFetchError(e);
-    return false;
-  } finally {
-    pending.value = false;
+    username.value = ''
+    password.value = ''
+    await refreshMe()
+    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+    return true
+  }
+  catch (e: unknown) {
+    error.value = messageFromAuthFetchError(e)
+    return false
+  }
+  finally {
+    pending.value = false
   }
 }
 
 async function onSignOut() {
-  pending.value = true;
+  pending.value = true
   try {
-    await $fetch("/api/auth/sign-out", { method: "POST" });
-    await refreshMe();
-    await refreshNuxtData(["cart-badge", "cart-items", "cart-total"]);
-  } finally {
-    pending.value = false;
+    await $fetch('/api/auth/sign-out', { method: 'POST' })
+    await refreshMe()
+    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+  }
+  finally {
+    pending.value = false
   }
 }
 
 async function signOutAndClose(close: () => void) {
-  await onSignOut();
-  close();
+  await onSignOut()
+  close()
 }
 
 async function signInAndClose(close: () => void) {
-  if (await onSignIn()) close();
+  if (await onSignIn())
+    close()
 }
 
 async function signUpAndClose(close: () => void) {
-  if (await onSignUp()) close();
+  if (await onSignUp())
+    close()
 }
 </script>
 

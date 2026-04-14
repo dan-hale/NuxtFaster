@@ -5,6 +5,9 @@ import { env } from 'node:process'
 if (!env.DATABASE_URL)
   throw new Error('DATABASE_URL is not set')
 
+if (!env.REDIS_URL)
+  throw new Error('REDIS_URL is not set')
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -17,6 +20,7 @@ export default defineNuxtConfig({
     '@vercel/analytics',
     '@vercel/speed-insights',
     '@nuxt/image',
+    'nuxt-security',
   ],
   image: {
     domains: ['localhost', '127.0.0.1', 'bevgyjm5apuichhj.public.blob.vercel-storage.com'],
@@ -24,7 +28,23 @@ export default defineNuxtConfig({
     quality: 80,
   },
   css: ['~/assets/css/main.css'],
-  /** CDN/browser cache hints for public GET APIs. DB reads also use in-process `withCache` (see server/utils/cache.ts). */
+  nitro: {
+    storage: {
+      cache: {
+        driver: 'redis',
+        url: env.REDIS_URL,
+      },
+    },
+  },
+  security: {
+    rateLimiter: {
+      driver: { name: 'redis', options: { url: env.REDIS_URL } },
+      tokensPerInterval: 100_000,
+      interval: 15 * 60 * 1000,
+      ipHeader: 'x-real-ip',
+    },
+  },
+  /** CDN/browser cache hints for public GET APIs. Hot DB reads use Nitro `defineCachedFunction` (see server/utils/queries.ts). */
   routeRules: {
     '/api/search': {
       headers: { 'cache-control': 'public, max-age=600' },
@@ -32,11 +52,19 @@ export default defineNuxtConfig({
     '/api/prefetch-images/**': {
       headers: { 'cache-control': 'public, max-age=3600' },
     },
+    '/api/auth/sign-in': {
+      security: {
+        rateLimiter: { tokensPerInterval: 5 },
+      },
+    },
+    '/api/auth/sign-up': {
+      security: {
+        rateLimiter: { tokensPerInterval: 1 },
+      },
+    },
   },
   runtimeConfig: {
     databaseUrl: env.DATABASE_URL,
-    kvRestApiUrl: env.KV_REST_API_URL,
-    kvRestApiToken: env.KV_REST_API_TOKEN,
     public: {
       siteUrl:
         env.NUXT_PUBLIC_SITE_URL

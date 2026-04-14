@@ -12,20 +12,6 @@ export default defineEventHandler(async (event) => {
     authSchema.parse(body),
   );
 
-  const ip = getRequestHeader(event, "x-real-ip") ?? "local";
-  const rl = getAuthRateLimit();
-  if (rl) {
-    const res = await rl.limit(ip);
-    if (!res.success) {
-      return {
-        error: {
-          code: "AUTH_ERROR",
-          message: "Too many attempts. Try again later",
-        },
-      };
-    }
-  }
-
   const db = useDb();
   const user = await db
     .select({ user: users })

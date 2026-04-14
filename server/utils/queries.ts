@@ -8,7 +8,6 @@ import {
   users,
 } from "~~/db/schema";
 import { useDb } from "./db";
-import { withCache } from "./cache";
 
 const REVALIDATE_PRODUCTS = 60 * 60 * 2;
 
@@ -43,9 +42,13 @@ const getProductsForSubcategoryUncached = async (subcategorySlug: string) => {
   });
 };
 
-export const getProductsForSubcategory = withCache(
+export const getProductsForSubcategory = defineCachedFunction(
   getProductsForSubcategoryUncached,
-  { maxAgeSeconds: REVALIDATE_PRODUCTS, name: "subcategory-products" },
+  {
+    name: "subcategory-products",
+    maxAge: REVALIDATE_PRODUCTS,
+    getKey: (subcategorySlug: string) => subcategorySlug,
+  },
 );
 
 const getCollectionsUncached = async () => {
@@ -58,9 +61,10 @@ const getCollectionsUncached = async () => {
   });
 };
 
-export const getCollections = withCache(getCollectionsUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
+export const getCollections = defineCachedFunction(getCollectionsUncached, {
   name: "collections",
+  maxAge: REVALIDATE_PRODUCTS,
+  getKey: () => "default",
 });
 
 const getProductDetailsUncached = async (productSlug: string) => {
@@ -70,10 +74,14 @@ const getProductDetailsUncached = async (productSlug: string) => {
   });
 };
 
-export const getProductDetails = withCache(getProductDetailsUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
-  name: "product",
-});
+export const getProductDetails = defineCachedFunction(
+  getProductDetailsUncached,
+  {
+    name: "product",
+    maxAge: REVALIDATE_PRODUCTS,
+    getKey: (productSlug: string) => productSlug,
+  },
+);
 
 const getSubcategoryUncached = async (subcategorySlug: string) => {
   const db = useDb();
@@ -82,9 +90,10 @@ const getSubcategoryUncached = async (subcategorySlug: string) => {
   });
 };
 
-export const getSubcategory = withCache(getSubcategoryUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
+export const getSubcategory = defineCachedFunction(getSubcategoryUncached, {
   name: "subcategory",
+  maxAge: REVALIDATE_PRODUCTS,
+  getKey: (subcategorySlug: string) => subcategorySlug,
 });
 
 const getCategoryUncached = async (categorySlug: string) => {
@@ -101,9 +110,10 @@ const getCategoryUncached = async (categorySlug: string) => {
   });
 };
 
-export const getCategory = withCache(getCategoryUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
+export const getCategory = defineCachedFunction(getCategoryUncached, {
   name: "category",
+  maxAge: REVALIDATE_PRODUCTS,
+  getKey: (categorySlug: string) => categorySlug,
 });
 
 const getCollectionDetailsUncached = async (collectionSlug: string) => {
@@ -117,19 +127,24 @@ const getCollectionDetailsUncached = async (collectionSlug: string) => {
   });
 };
 
-export const getCollectionDetails = withCache(getCollectionDetailsUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
-  name: "collection",
-});
+export const getCollectionDetails = defineCachedFunction(
+  getCollectionDetailsUncached,
+  {
+    name: "collection",
+    maxAge: REVALIDATE_PRODUCTS,
+    getKey: (collectionSlug: string) => collectionSlug,
+  },
+);
 
 const getProductCountUncached = async () => {
   const db = useDb();
   return db.select({ count: count() }).from(products);
 };
 
-export const getProductCount = withCache(getProductCountUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
+export const getProductCount = defineCachedFunction(getProductCountUncached, {
   name: "total-product-count",
+  maxAge: REVALIDATE_PRODUCTS,
+  getKey: () => "default",
 });
 
 const getCategoryProductCountUncached = async (categorySlug: string) => {
@@ -149,9 +164,13 @@ const getCategoryProductCountUncached = async (categorySlug: string) => {
     .where(eq(categories.slug, categorySlug));
 };
 
-export const getCategoryProductCount = withCache(
+export const getCategoryProductCount = defineCachedFunction(
   getCategoryProductCountUncached,
-  { maxAgeSeconds: REVALIDATE_PRODUCTS, name: "category-product-count" },
+  {
+    name: "category-product-count",
+    maxAge: REVALIDATE_PRODUCTS,
+    getKey: (categorySlug: string) => categorySlug,
+  },
 );
 
 const getSubcategoryProductCountUncached = async (subcategorySlug: string) => {
@@ -162,11 +181,12 @@ const getSubcategoryProductCountUncached = async (subcategorySlug: string) => {
     .where(eq(products.subcategory_slug, subcategorySlug));
 };
 
-export const getSubcategoryProductCount = withCache(
+export const getSubcategoryProductCount = defineCachedFunction(
   getSubcategoryProductCountUncached,
   {
-    maxAgeSeconds: REVALIDATE_PRODUCTS,
     name: "subcategory-product-count",
+    maxAge: REVALIDATE_PRODUCTS,
+    getKey: (subcategorySlug: string) => subcategorySlug,
   },
 );
 
@@ -223,7 +243,11 @@ const getSearchResultsUncached = async (searchTerm: string) => {
   return results;
 };
 
-export const getSearchResults = withCache(getSearchResultsUncached, {
-  maxAgeSeconds: REVALIDATE_PRODUCTS,
-  name: "search-results",
-});
+export const getSearchResults = defineCachedFunction(
+  getSearchResultsUncached,
+  {
+    name: "search-results",
+    maxAge: REVALIDATE_PRODUCTS,
+    getKey: (searchTerm: string) => searchTerm,
+  },
+);
