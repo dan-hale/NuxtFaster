@@ -1,52 +1,57 @@
 <script setup lang="ts">
-import { X } from "lucide-vue-next";
+import { X } from 'lucide-vue-next'
 
-definePageMeta({ shopChrome: false });
+definePageMeta({ shopChrome: false, authHeaderSsr: true })
 
-type CartLine = {
-  slug: string;
-  name: string;
-  description: string;
-  price: string;
-  image_url: string | null;
-  quantity: number;
+interface Me { id: number, username: string }
+
+interface CartLine {
+  slug: string
+  name: string
+  description: string
+  price: string
+  image_url: string | null
+  quantity: number
   subcategory: {
-    slug: string;
-    subcollection: { category_slug: string };
-  };
-};
+    slug: string
+    subcollection: { category_slug: string }
+  }
+}
 
-useSeoMeta({ title: "Order" });
+useSeoMeta({ title: 'Order' })
 
-const { data: items, refresh: refreshItems } = useFetch<CartLine[]>("/api/cart/items", {
-  key: "cart-items",
+const { data: items, refresh: refreshItems } = useFetch<CartLine[]>('/api/cart/items', {
+  key: 'cart-items',
   default: () => [],
-});
+})
 
-const { data: me, pending: mePending } = useMe();
+const { data: me } = useFetch<Me>('/api/me', {
+  key: 'me',
+})
 
 const total = computed(() => {
-  const list = items.value ?? [];
+  const list = items.value ?? []
   const n = list.reduce(
     (acc, it) => acc + it.quantity * Number(it.price),
     0,
-  );
-  return n.toFixed(2);
-});
+  )
+  return n.toFixed(2)
+})
 
-const removing = ref<string | null>(null);
+const removing = ref<string | null>(null)
 
 async function removeLine(productSlug: string) {
-  removing.value = productSlug;
+  removing.value = productSlug
   try {
-    await $fetch("/api/cart/remove", {
-      method: "POST",
+    await $fetch('/api/cart/remove', {
+      method: 'POST',
       body: { productSlug },
-    });
-    await refreshItems();
-    await refreshNuxtData(["cart-badge", "cart-items", "cart-total"]);
-  } finally {
-    removing.value = null;
+    })
+    await refreshItems()
+    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+  }
+  finally {
+    removing.value = null
   }
 }
 </script>
@@ -82,18 +87,15 @@ async function removeLine(productSlug: string) {
                 >
                   <div class="flex flex-row space-x-2">
                     <div class="flex h-24 w-24 items-center justify-center bg-gray-100">
-                      <NuxtImg
+                      <img
                         loading="eager"
                         decoding="sync"
-                        placeholder
-                        :preload="{ fetchPriority: 'low' }"
                         :src="item.image_url ?? '/placeholder.svg'"
                         alt="Product"
                         width="256"
                         height="256"
                         class="max-h-full max-w-full object-contain"
-                        fit="contain"
-                      />
+                      >
                     </div>
                     <div class="max-w-[100px] flex-grow sm:max-w-full">
                       <h2 class="font-semibold">
@@ -144,11 +146,7 @@ async function removeLine(productSlug: string) {
               Applicable shipping and tax will be added.
             </p>
           </div>
-          <div v-if="mePending" class="space-y-2" aria-busy="true">
-            <div class="h-4 w-44 animate-pulse rounded bg-gray-200/80" />
-            <div class="h-32 max-w-xs animate-pulse rounded bg-gray-200/60" />
-          </div>
-          <div v-else-if="!me" class="space-y-3">
+          <div v-if="!me" class="space-y-3">
             <p class="font-semibold text-accent1">
               Log in to place an order
             </p>
