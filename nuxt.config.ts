@@ -106,4 +106,7 @@ export default defineNuxtConfig({
       siteUrl: env.VERCEL_URL,
     },
   },
+  robots: {
+    blockNonSeoBots: true,
+  },
 })

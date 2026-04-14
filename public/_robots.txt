@@ -1,2 +1,4 @@
 User-Agent: *
 Disallow:
+/order
+/order-history
