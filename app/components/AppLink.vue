@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
 import type { PrefetchedPageImage } from '~~/server/types/prefetched-page-image'
 
 const props = withDefaults(
@@ -9,11 +10,27 @@ const props = withDefaults(
   { prefetch: true },
 )
 
+const router = useRouter()
+const nuxtApp = useNuxtApp()
 const anchorRef = useTemplateRef<HTMLAnchorElement>('anchorRef')
 const imageCache = useState<Record<string, PrefetchedPageImage[]>>(
   'link-image-prefetch',
   () => ({}),
 )
+
+/** Warm route chunks + link hooks (mirrors Next `router.prefetch`). Custom `NuxtLink` slots do not get interaction prefetch listeners. */
+function prefetchRouteChunks() {
+  if (!import.meta.client || props.prefetch === false)
+    return
+  const href = props.to
+  if (!href.startsWith('/') || href.startsWith('/order') || href === '/')
+    return
+  const fullPath = router.resolve(href as RouteLocationRaw).fullPath
+  void Promise.resolve(nuxtApp.hooks.callHook('link:prefetch', fullPath)).catch(
+    () => {},
+  )
+  void preloadRouteComponents(href, router).catch(() => {})
+}
 
 async function prefetchImages() {
   const href = props.to
@@ -64,6 +81,7 @@ onMounted(() => {
     ([entry]) => {
       if (entry?.isIntersecting) {
         setTimeout(() => {
+          prefetchRouteChunks()
           void prefetchImages()
           stop()
         }, 300)
@@ -102,6 +120,7 @@ function onAnchorClick(
       @click="onAnchorClick($event, navigate)"
       @mouseenter="
         () => {
+          prefetchRouteChunks();
           void prefetchImages().then(() => applyPrefetchImages());
         }
       "
