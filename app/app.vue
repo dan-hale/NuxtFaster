@@ -3,6 +3,4 @@
     <NuxtPage />
   </NuxtLayout>
   <NuxtRouteAnnouncer />
-  <AppToaster />
-  <WelcomeToast />
 </template>

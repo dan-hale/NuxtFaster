@@ -132,5 +132,8 @@ const { data: collections } = await useFetch("/api/collections", {
         >Source Code</a>
       </div>
     </footer>
+    <ClientOnly>
+      <WelcomeToast />
+    </ClientOnly>
   </div>
 </template>
