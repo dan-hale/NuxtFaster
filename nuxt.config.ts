@@ -41,8 +41,9 @@ export default defineNuxtConfig({
   },
   image: {
     domains: ['localhost', '127.0.0.1', 'bevgyjm5apuichhj.public.blob.vercel-storage.com'],
-    format: ['webp', 'avif', 'jpeg'],
+    format: ['avif', 'webp', 'jpeg'],
     quality: 80,
+    densities: [1, 2],
     screens: {
       'search': 40,
       'thumb': 48,
