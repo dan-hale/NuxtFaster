@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
+    '@nuxtjs/seo',
     'nuxt-auth-utils',
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
@@ -24,18 +25,32 @@ export default defineNuxtConfig({
     '@nuxt/hints',
     'nuxt-booster',
   ],
+  app: {
+    head: {
+      titleTemplate: '%s | NuxtFaster',
+      htmlAttrs: {
+        lang: 'en',
+      },
+    },
+  },
+  site: {
+    url: env.VERCEL_URL,
+    name: 'NuxtFaster',
+    description: 'A performant site built with Nuxt',
+    defaultLocale: 'en',
+  },
   image: {
     domains: ['localhost', '127.0.0.1', 'bevgyjm5apuichhj.public.blob.vercel-storage.com'],
     format: ['webp', 'avif', 'jpeg'],
     quality: 80,
     screens: {
-      search: 40,
-      thumb: 48,
-      product: 256,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
+      'search': 40,
+      'thumb': 48,
+      'product': 256,
+      'sm': 640,
+      'md': 768,
+      'lg': 1024,
+      'xl': 1280,
       '2xl': 1536,
     },
   },
@@ -58,7 +73,7 @@ export default defineNuxtConfig({
     headers: {
       contentSecurityPolicy: {
         'img-src': [
-          "'self'",
+          '\'self\'',
           'data:',
           'https://bevgyjm5apuichhj.public.blob.vercel-storage.com',
         ],
@@ -87,11 +102,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     databaseUrl: env.DATABASE_URL,
     public: {
-      siteUrl:
-        env.NUXT_PUBLIC_SITE_URL
-        || (env.VERCEL_URL
-          ? `https://${env.VERCEL_URL}`
-          : 'http://localhost:3000'),
+      siteUrl: env.VERCEL_URL,
     },
   },
 })
