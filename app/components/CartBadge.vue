@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data } = useFetch<{ totalQuantity: number }>("/api/cart/badge", {
+const { data } = useFetch("/api/cart/badge", {
   key: "cart-badge",
 });
 </script>

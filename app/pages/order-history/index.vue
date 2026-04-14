@@ -1,11 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: false });
 
-type Me = { id: number; username: string } | null;
-
 useSeoMeta({ title: "Order History" });
 
-const { data: me } = useFetch<Me>("/api/me", {
+const { data: me } = useFetch("/api/me", {
   key: "me",
 });
 </script>

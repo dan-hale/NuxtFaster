@@ -3,29 +3,14 @@ import { X } from 'lucide-vue-next'
 
 definePageMeta({ shopChrome: false, authHeaderSsr: true })
 
-interface Me { id: number, username: string }
-
-interface CartLine {
-  slug: string
-  name: string
-  description: string
-  price: string
-  image_url: string | null
-  quantity: number
-  subcategory: {
-    slug: string
-    subcollection: { category_slug: string }
-  }
-}
-
 useSeoMeta({ title: 'Order' })
 
-const { data: items, refresh: refreshItems } = useFetch<CartLine[]>('/api/cart/items', {
+const { data: items, refresh: refreshItems } = useFetch('/api/cart/items', {
   key: 'cart-items',
   default: () => [],
 })
 
-const { data: me } = useFetch<Me>('/api/me', {
+const { data: me } = useFetch('/api/me', {
   key: 'me',
 })
 

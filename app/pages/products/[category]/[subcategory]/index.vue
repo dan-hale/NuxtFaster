@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Product } from "~~/db/schema";
-
 definePageMeta({ shopChrome: true });
 
 const route = useRoute();
@@ -8,23 +6,22 @@ const subSlug = computed(() =>
   decodeURIComponent(String(route.params.subcategory)),
 );
 
-const { data } = await useFetch<{
-  subcategory: { name: string; slug: string };
-  products: Product[];
-  count: number;
-}>(() => `/api/subcategory/${encodeURIComponent(subSlug.value)}`, {
-  key: () => `subcategory-${subSlug.value}`,
-  watch: [subSlug],
-  onResponseError({ response }) {
-    if (response.status === 404) {
-      showError({
-        statusCode: 404,
-        statusMessage: "Subcategory not found",
-        fatal: true,
-      });
-    }
+const { data } = await useFetch(
+  () => `/api/subcategory/${encodeURIComponent(subSlug.value)}`,
+  {
+    key: () => `subcategory-${subSlug.value}`,
+    watch: [subSlug],
+    onResponseError({ response }) {
+      if (response.status === 404) {
+        showError({
+          statusCode: 404,
+          statusMessage: "Subcategory not found",
+          fatal: true,
+        });
+      }
+    },
   },
-});
+);
 
 useSeoMeta({
   title: () => data.value?.subcategory?.name ?? "Products",

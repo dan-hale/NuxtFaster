@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Product } from "~~/db/schema";
-
 definePageMeta({ shopChrome: true });
 
 const route = useRoute();
@@ -14,7 +12,7 @@ const categorySlug = computed(() =>
   decodeURIComponent(String(route.params.category)),
 );
 
-const { data: productData } = await useFetch<Product>(
+const { data: productData } = await useFetch(
   () => `/api/product/${encodeURIComponent(productSlug.value)}`,
   {
     key: () => `product-${productSlug.value}`,
@@ -31,12 +29,13 @@ const { data: productData } = await useFetch<Product>(
   },
 );
 
-const { data: subData } = await useFetch<{
-  products: Product[];
-}>(() => `/api/subcategory/${encodeURIComponent(subSlug.value)}`, {
-  key: () => `subcategory-related-${subSlug.value}`,
-  watch: [subSlug],
-});
+const { data: subData } = await useFetch(
+  () => `/api/subcategory/${encodeURIComponent(subSlug.value)}`,
+  {
+    key: () => `subcategory-related-${subSlug.value}`,
+    watch: [subSlug],
+  },
+);
 
 const related = computed(() => {
   const list = subData.value?.products ?? [];

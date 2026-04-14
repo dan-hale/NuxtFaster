@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import type { Category, Collection } from "~~/db/schema";
-
 definePageMeta({ shopChrome: true });
 
 const route = useRoute();
 const slug = computed(() => decodeURIComponent(String(route.params.collection)));
 
-type CollectionRow = Collection & { categories: Category[] };
-
-const { data: rows } = await useFetch<CollectionRow[]>(
+const { data: rows } = await useFetch(
   () => `/api/collection/${encodeURIComponent(slug.value)}`,
   {
     key: () => `collection-page-${slug.value}`,

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-type Me = { id: number; username: string } | null;
-
 withDefaults(
   defineProps<{
     compact?: boolean;
@@ -8,7 +6,7 @@ withDefaults(
   { compact: false },
 );
 
-const { data: me, refresh: refreshMe } = useFetch<Me>("/api/me", {
+const { data: me, refresh: refreshMe } = useFetch("/api/me", {
   key: "me",
 });
 
@@ -37,11 +35,11 @@ async function onSignIn(): Promise<boolean> {
   pending.value = true;
   error.value = null;
   try {
-    const res = await $fetch<{ ok?: boolean; error?: string | { message?: string } }>(
-      "/api/auth/sign-in",
-      { method: "POST", body: { username: username.value, password: password.value } },
-    );
-    if (res.error) {
+    const res = await $fetch("/api/auth/sign-in", {
+      method: "POST",
+      body: { username: username.value, password: password.value },
+    });
+    if ("error" in res && res.error) {
       error.value =
         typeof res.error === "string"
           ? res.error
@@ -65,11 +63,11 @@ async function onSignUp(): Promise<boolean> {
   pending.value = true;
   error.value = null;
   try {
-    const res = await $fetch<{ ok?: boolean; error?: string | { message?: string } }>(
-      "/api/auth/sign-up",
-      { method: "POST", body: { username: username.value, password: password.value } },
-    );
-    if (res.error) {
+    const res = await $fetch("/api/auth/sign-up", {
+      method: "POST",
+      body: { username: username.value, password: password.value },
+    });
+    if ("error" in res && res.error) {
       error.value =
         typeof res.error === "string"
           ? res.error

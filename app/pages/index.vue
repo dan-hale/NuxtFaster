@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import type { Category, Collection } from "~~/db/schema";
-
 definePageMeta({ shopChrome: true });
 
 useSeoMeta({ title: "NuxtFaster" });
 
-type CollectionRow = Collection & { categories: Category[] };
-
-const { data: collections } = await useFetch<CollectionRow[]>("/api/collections", {
+const { data: collections } = await useFetch("/api/collections", {
   key: "collections",
 });
 
-const { data: productCount } = await useFetch<number>("/api/product-count", {
+const { data: productCount } = await useFetch("/api/product-count", {
   key: "product-count",
 });
 

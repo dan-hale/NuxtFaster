@@ -1,87 +1,64 @@
 <script setup lang="ts">
-import type { SelectEvent } from "reka-ui";
-import { X } from "lucide-vue-next";
-import { cn } from "~/utils/cn";
+import type { SearchHit } from '~~/server/api/search.get'
+import { X } from 'lucide-vue-next'
+import { cn } from '~/utils/cn'
 
-type SearchRow = {
-  href: string;
-  name: string;
-  slug: string;
-  image_url: string | null;
-  description: string;
-  price: string;
-  subcategory_slug: string;
-};
+const searchTerm = ref('')
 
-const searchTerm = ref("");
-const debouncedTerm = ref("");
-watchDebounced(
-  searchTerm,
-  (v) => {
-    debouncedTerm.value = v;
-  },
-  { debounce: 250 },
-);
+const searchQuery = computed(() => ({ q: searchTerm.value.trim() }))
 
-const { data, pending } = useLazyAsyncData(
-  () => `search-${debouncedTerm.value}`,
-  (_nuxtApp, { signal }) => {
-    const q = debouncedTerm.value.trim();
-    if (!q.length) {
-      return Promise.resolve([] as SearchRow[]);
-    }
-    return $fetch<SearchRow[]>("/api/search", {
-      query: { q },
-      signal,
-    });
-  },
-  {
-    watch: [debouncedTerm],
-    server: false,
-    default: () => [] as SearchRow[],
-  },
-);
+const queryDebounced = useDebounce(searchQuery, 250)
+
+const { data, pending } = useLazyFetch('/api/search', {
+  query: queryDebounced,
+  server: false,
+  watch: [queryDebounced],
+  default: () => [],
+  immediate: false,
+})
 
 const displayItems = computed(() => {
-  if (!searchTerm.value.trim()) return [];
-  return data.value ?? [];
-});
+  if (!searchTerm.value.trim())
+    return []
+  return data.value ?? []
+})
 
 const isLoading = computed(
   () => pending.value && searchTerm.value.trim().length > 0,
-);
+)
 
-const open = ref(false);
+const open = ref(false)
 
 watch(searchTerm, (v) => {
-  if (!v.trim()) open.value = false;
-});
+  if (!v.trim())
+    open.value = false
+})
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
 watch(
   () => route.params,
   (params) => {
     if (!params.product) {
-      const sub = params.subcategory;
-      searchTerm.value =
-        typeof sub === "string" ? sub.replaceAll("-", " ") : "";
+      const sub = params.subcategory
+      searchTerm.value
+        = typeof sub === 'string' ? sub.replaceAll('-', ' ') : ''
     }
   },
   { immediate: true },
-);
+)
 
 function clearSearch() {
-  searchTerm.value = "";
-  open.value = false;
+  searchTerm.value = ''
+  open.value = false
 }
 
-function onItemSelect(item: SearchRow, event: SelectEvent<typeof item.slug>) {
-  event.preventDefault();
-  void router.push(item.href);
-  searchTerm.value = item.name;
-  open.value = false;
+function onItemSelect(item: SearchHit, event: Event) {
+  event.preventDefault()
+  void router.push(item.href)
+  searchTerm.value = item.name
+  open.value = false
 }
 </script>
 

@@ -8,7 +8,7 @@ async function onSubmit() {
   pending.value = true;
   message.value = null;
   try {
-    const res = await $fetch<{ message?: string }>("/api/cart/add", {
+    const res = await $fetch("/api/cart/add", {
       method: "POST",
       body: { productSlug: props.productSlug },
     });
