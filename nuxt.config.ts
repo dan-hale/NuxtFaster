@@ -21,6 +21,8 @@ export default defineNuxtConfig({
     '@vercel/speed-insights',
     '@nuxt/image',
     'nuxt-security',
+    '@nuxt/hints',
+    'nuxt-booster',
   ],
   image: {
     domains: ['localhost', '127.0.0.1', 'bevgyjm5apuichhj.public.blob.vercel-storage.com'],
