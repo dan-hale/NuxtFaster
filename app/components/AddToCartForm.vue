@@ -24,7 +24,7 @@ async function onSubmit() {
   <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
     <button
       type="submit"
-      class="max-w-[150px] rounded-[2px] bg-accent1 px-5 py-1 text-sm font-semibold text-white"
+      class="max-w-[150px] rounded-[2px] bg-accent1 px-5 py-1 text-sm font-semibold text-gray-900"
     >
       Add to cart
     </button>

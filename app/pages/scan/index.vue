@@ -9,7 +9,7 @@ useSeoMeta({ title: "Scan" });
     <p class="mb-4 text-lg">
       Performance scan placeholder (no react-scan in this Nuxt build).
     </p>
-    <AppLink to="/" class="text-blue-500 underline hover:text-blue-700">
+    <AppLink to="/" class="text-accent1 underline hover:text-accent1/80">
       Back to home
     </AppLink>
   </div>

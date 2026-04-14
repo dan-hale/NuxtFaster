@@ -57,8 +57,8 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        accent1: "#1d4ed8",
-        accent2: "#bfdbfe",
+        accent1: "#00dc82",
+        accent2: "#d1fae5",
       },
       borderRadius: {
         lg: "var(--radius)",
