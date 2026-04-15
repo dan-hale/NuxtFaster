@@ -8,6 +8,7 @@ withDefaults(
 
 const { data: me, refresh: refreshMe } = useFetch('/api/me', {
   key: 'me',
+  server: false,
 })
 
 const username = ref('')
