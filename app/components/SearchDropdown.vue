@@ -9,13 +9,21 @@ const searchQuery = computed(() => ({ q: searchTerm.value.trim() }))
 
 const queryDebounced = useDebounce(searchQuery, 250)
 
-const { data, pending } = useLazyFetch('/api/search', {
+const { data, pending, refresh } = useLazyFetch('/api/search', {
   query: queryDebounced,
   server: false,
-  watch: [queryDebounced],
+  watch: false,
   default: () => [],
   immediate: false,
 })
+
+const open = ref(false)
+
+debouncedWatch(searchTerm, () => {
+  if (open.value !== true)
+    return
+  refresh()
+}, { debounce: 300 })
 
 const displayItems = computed(() => {
   if (!searchTerm.value.trim())
@@ -27,8 +35,6 @@ const isLoading = computed(
   () => pending.value && searchTerm.value.trim().length > 0,
 )
 
-const open = ref(false)
-
 watch(searchTerm, (v) => {
   if (!v.trim())
     open.value = false
@@ -37,17 +43,13 @@ watch(searchTerm, (v) => {
 const route = useRoute()
 const router = useRouter()
 
-watch(
-  () => route.params,
-  (params) => {
-    if (!params.product) {
-      const sub = params.subcategory
-      searchTerm.value
-        = typeof sub === 'string' ? sub.replaceAll('-', ' ') : ''
-    }
-  },
-  { immediate: true },
-)
+watch(() => route.params, (params) => {
+  if (!params.product) {
+    const sub = params.subcategory
+    searchTerm.value
+      = typeof sub === 'string' ? sub.replaceAll('-', ' ') : ''
+  }
+}, { immediate: true })
 
 function clearSearch() {
   searchTerm.value = ''
