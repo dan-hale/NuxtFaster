@@ -10,7 +10,17 @@ if (!env.REDIS_URL)
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  features: {
+    inlineStyles: true,
+  },
+  experimental: {
+    typedPages: true,
+    payloadExtraction: true,
+    renderJsonPayloads: true,
+    browserDevtoolsTiming: true,
+    inlineRouteRules: true,
+    buildCache: true,
+  },
   modules: [
     '@nuxtjs/seo',
     'nuxt-auth-utils',
