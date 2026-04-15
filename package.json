@@ -14,10 +14,9 @@
   },
   "dependencies": {
     "@antfu/eslint-config": "^8.1.1",
-    "@fontsource/geist-mono": "^5.1.0",
-    "@fontsource/geist-sans": "^5.1.0",
     "@neondatabase/serverless": "^1.0.2",
     "@nuxt/eslint": "1.15.2",
+    "@nuxt/fonts": "0.14.0",
     "@nuxt/hints": "1.0.3",
     "@nuxt/image": "2.0.0",
     "@nuxtjs/seo": "^5.1.3",

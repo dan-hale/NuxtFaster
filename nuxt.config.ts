@@ -24,7 +24,26 @@ export default defineNuxtConfig({
     'nuxt-security',
     '@nuxt/hints',
     'nuxt-booster',
+    '@nuxt/fonts',
   ],
+  /**
+   * Geist on Google Fonts is registered as "Geist" (sans) and "Geist Mono".
+   * Nuxt Fonts resolves variable woff2 at build time, serves under `/_fonts`, and wires preload + metrics.
+   */
+  fonts: {
+    provider: 'google',
+    defaults: {
+      weights: ['100..900'],
+      styles: ['normal'],
+      subsets: ['latin'],
+      formats: ['woff2'],
+      preload: true,
+    },
+    families: [
+      { name: 'Geist', provider: 'google', global: true, preload: true },
+      { name: 'Geist Mono', provider: 'google', global: true, preload: false },
+    ],
+  },
   app: {
     head: {
       titleTemplate: '%s',

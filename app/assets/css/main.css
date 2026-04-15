@@ -1,12 +1,10 @@
-@import "@fontsource/geist-sans/latin.css";
-@import "@fontsource/geist-mono/latin.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-geist-sans: "Geist Sans", system-ui, sans-serif;
+  /* Google Fonts CSS names; same Vercel Geist faces as @fontsource/geist-sans */
+  --font-geist-sans: "Geist", system-ui, sans-serif;
   --font-geist-mono: "Geist Mono", ui-monospace, monospace;
 }
 
@@ -77,7 +75,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
 }
 
