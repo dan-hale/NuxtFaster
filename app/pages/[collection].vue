@@ -52,7 +52,7 @@ useSeoMeta({
               class="mb-2 h-14 w-14 border hover:bg-accent2"
               width="56"
               height="56"
-              sizes="56px"
+              sizes="64px"
               fit="cover"
             />
             <span class="text-xs">{{ category.name }}</span>

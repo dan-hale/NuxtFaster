@@ -67,7 +67,6 @@ useSeoMeta({
           :alt="`A small picture of ${productData.name}`"
           width="256"
           height="256"
-          sizes="(max-width: 767px) 224px, 256px"
           class="h-56 w-56 flex-shrink-0 border-2 md:h-64 md:w-64"
           fit="contain"
           :preload="{ fetchPriority: 'high' }"

@@ -120,7 +120,7 @@ function onItemSelect(item: SearchHit, event: Event) {
                 class="h-10 w-10 pr-2"
                 width="40"
                 height="40"
-                sizes="40px"
+                sizes="64px"
                 fit="cover"
               />
               <span class="text-sm">{{ item.name }}</span>

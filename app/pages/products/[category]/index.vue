@@ -59,7 +59,7 @@ useSeoMeta({
                 :alt="`A small picture of ${subcategory.name}`"
                 width="48"
                 height="48"
-                sizes="48px"
+                sizes="64px"
                 class="h-12 w-12 flex-shrink-0 object-cover"
                 fit="cover"
               />

@@ -31,7 +31,7 @@ const src = computed(
         class="h-auto w-12 flex-shrink-0 object-cover"
         width="48"
         height="48"
-        sizes="48px"
+        sizes="64px"
         fit="cover"
       />
     </div>
