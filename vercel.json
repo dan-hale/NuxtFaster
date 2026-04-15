@@ -1,0 +1,39 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "images": {
+    "sizes": [
+      16, 18, 32, 40, 48, 56, 64, 80, 96, 112, 128, 224, 256, 384, 448, 640,
+      750, 768, 1024, 1080, 1280, 1536, 1920, 2048, 3840
+    ],
+    "qualities": [60, 65, 70, 75, 80, 85, 90, 100],
+    "formats": ["image/avif", "image/webp"],
+    "minimumCacheTTL": 31536000,
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "bevgyjm5apuichhj.public.blob.vercel-storage.com",
+        "port": "",
+        "pathname": "^/.*$",
+        "search": ""
+      }
+    ]
+  },
+  "rewrites": [
+    {
+      "source": "/insights/vitals.js",
+      "destination": "https://cdn.vercel-insights.com/v1/speed-insights/script.js"
+    },
+    {
+      "source": "/insights/events.js",
+      "destination": "https://cdn.vercel-insights.com/v1/script.js"
+    },
+    {
+      "source": "/hfi/events/:slug*",
+      "destination": "https://vitals.vercel-insights.com/v1/:slug*?dsn=KD0ni5HQVdxsHAF2tqBECObqH"
+    },
+    {
+      "source": "/hfi/vitals",
+      "destination": "https://vitals.vercel-insights.com/v2/vitals?dsn=fsGnK5U2NRPzYx0Gch0g5w5PxT1"
+    }
+  ]
+}
