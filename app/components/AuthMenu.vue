@@ -140,14 +140,14 @@ async function signUpAndClose(close: () => void) {
         </template>
         <template #default="{ close }">
           <div class="flex flex-col items-center gap-2">
-            <UiButton
+            <LazyUiButton
               variant="outline"
               size="sm"
               :disabled="pending"
               @click="signOutAndClose(close)"
             >
               Sign out
-            </UiButton>
+            </LazyUiButton>
           </div>
         </template>
       </AppPopover>
@@ -155,23 +155,23 @@ async function signUpAndClose(close: () => void) {
         <p class="text-sm font-semibold text-accent1">
           Signed in as {{ me.username }}
         </p>
-        <UiButton variant="outline" size="sm" :disabled="pending" @click="onSignOut">
+        <LazyUiButton variant="outline" size="sm" :disabled="pending" @click="onSignOut">
           Sign out
-        </UiButton>
+        </LazyUiButton>
       </div>
     </template>
 
     <template v-else-if="compact">
       <div class="flex flex-col gap-3">
-        <UiInput v-model="username" placeholder="Username" />
-        <UiInput v-model="password" type="password" placeholder="Password" />
+        <LazyUiInput v-model="username" placeholder="Username" />
+        <LazyUiInput v-model="password" type="password" placeholder="Password" />
         <div class="flex flex-wrap gap-2">
-          <UiButton size="sm" :disabled="pending" @click="onSignIn">
+          <LazyUiButton size="sm" :disabled="pending" @click="onSignIn">
             Log in
-          </UiButton>
-          <UiButton variant="outline" size="sm" :disabled="pending" @click="onSignUp">
+          </LazyUiButton>
+          <LazyUiButton variant="outline" size="sm" :disabled="pending" @click="onSignUp">
             Create login
-          </UiButton>
+          </LazyUiButton>
         </div>
         <p v-if="error" class="text-sm text-red-500">
           {{ error }}
@@ -194,24 +194,24 @@ async function signUpAndClose(close: () => void) {
       <template #default="{ close }">
         <span class="text-sm font-semibold text-accent1">Log in</span>
         <form class="mt-3 flex flex-col gap-3" @submit.prevent>
-          <UiInput v-model="username" placeholder="Username" />
-          <UiInput v-model="password" type="password" placeholder="Password" />
+          <LazyUiInput v-model="username" placeholder="Username" />
+          <LazyUiInput v-model="password" type="password" placeholder="Password" />
           <div class="flex flex-col gap-2">
-            <UiButton
+            <LazyUiButton
               type="button"
               :disabled="pending"
               @click="signInAndClose(close)"
             >
               Log in
-            </UiButton>
-            <UiButton
+            </LazyUiButton>
+            <LazyUiButton
               type="button"
               variant="outline"
               :disabled="pending"
               @click="signUpAndClose(close)"
             >
               Create login
-            </UiButton>
+            </LazyUiButton>
           </div>
           <p v-if="error" class="text-sm text-red-500">
             {{ error }}
