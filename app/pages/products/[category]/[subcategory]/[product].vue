@@ -1,55 +1,26 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: true, keepalive: true })
 
+const route = useRoute()
 
-const route = useRoute();
-const productSlug = computed(() =>
-  decodeURIComponent(String(route.params.product)),
-);
-const subSlug = computed(() =>
-  decodeURIComponent(String(route.params.subcategory)),
-);
-const categorySlug = computed(() =>
-  decodeURIComponent(String(route.params.category)),
-);
+const { data: productData } = await useFetch(() => `/api/product/${route.params.product}`)
 
-const { data: productData } = await useFetch(
-  () => `/api/product/${encodeURIComponent(productSlug.value)}`,
-  {
-    key: () => `product-${productSlug.value}`,
-    watch: [productSlug],
-    onResponseError({ response }) {
-      if (response.status === 404) {
-        showError({
-          statusCode: 404,
-          statusMessage: "Product not found",
-          fatal: true,
-        });
-      }
-    },
-  },
-);
-
-const { data: subData } = await useFetch(
-  () => `/api/subcategory/${encodeURIComponent(subSlug.value)}`,
-  {
-    key: () => `subcategory-related-${subSlug.value}`,
-    watch: [subSlug],
-  },
-);
+const { data: subData } = await useFetch(() => `/api/subcategory/${route.params.subcategory}`)
 
 const related = computed(() => {
-  const list = subData.value?.products ?? [];
-  const p = productData.value;
-  if (!p) return [];
-  const idx = list.findIndex((x) => x.slug === p.slug);
-  if (idx < 0) return list.filter((x) => x.slug !== p.slug);
-  return [...list.slice(idx + 1), ...list.slice(0, idx)];
-});
+  const list = subData.value?.products ?? []
+  const p = productData.value
+  if (!p)
+    return []
+  const idx = list.findIndex(x => x.slug === p.slug)
+  if (idx < 0)
+    return list.filter(x => x.slug !== p.slug)
+  return [...list.slice(idx + 1), ...list.slice(0, idx)]
+})
 
 useSeoMeta({
-  title: () => productData.value?.name ?? "Product",
-});
+  title: () => productData.value?.name ?? 'Product',
+})
 </script>
 
 <template>
@@ -90,8 +61,8 @@ useSeoMeta({
           :key="product.slug"
           loading="lazy"
           :product="product"
-          :category-slug="categorySlug"
-          :subcategory-slug="subSlug"
+          :category-slug="route.params.category as string"
+          :subcategory-slug="route.params.subcategory as string"
           :image-url="product.image_url"
         />
       </div>
