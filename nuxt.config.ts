@@ -10,16 +10,16 @@ if (!env.REDIS_URL)
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  features: {
-    inlineStyles: true,
-  },
+  // features: {
+  //   inlineStyles: true,
+  // },
   experimental: {
     typedPages: true,
-    payloadExtraction: true,
-    renderJsonPayloads: true,
-    browserDevtoolsTiming: true,
+    // payloadExtraction: true,
+    // renderJsonPayloads: true,
+    // browserDevtoolsTiming: true,
     inlineRouteRules: true,
-    buildCache: true,
+    // buildCache: true,
   },
   modules: [
     '@nuxtjs/seo',
