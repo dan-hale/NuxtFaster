@@ -9,7 +9,7 @@
       256,
       512
     ],
-    "qualities": [70],
+    "qualities": [28, 70],
     "formats": ["image/avif", "image/webp"],
     "minimumCacheTTL": 31536000,
     "remotePatterns": [
