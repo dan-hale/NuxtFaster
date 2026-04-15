@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RouteLocationRaw } from 'vue-router'
+import type { RouteLocationRaw, UseLinkReturn } from 'vue-router'
 
 withDefaults(defineProps<{
   to: RouteLocationRaw
@@ -7,24 +7,11 @@ withDefaults(defineProps<{
 }>(), {
   prefetch: true,
 })
-
-/** Router `navigate(e)` applies the same checks as native links (modifiers, button, `_blank`, …). */
-function onPointerDown(
-  e: PointerEvent,
-  navigate: (e?: MouseEvent) => void | Promise<unknown>,
-) {
-  void navigate(e)
-}
+type Navigate = UseLinkReturn['navigate']
 
 /** Suppress the redundant mouse `click` after pointerdown; `detail === 0` is keyboard activation. */
-function onClick(
-  e: MouseEvent,
-  navigate: (e?: MouseEvent) => void | Promise<unknown>,
-) {
-  if (e.detail === 0)
-    void navigate(e)
-  else
-    e.preventDefault()
+function onClick(e: MouseEvent, navigate: Navigate) {
+  e.detail === 0 ? navigate(e) : e.preventDefault()
 }
 </script>
 
@@ -39,7 +26,7 @@ function onClick(
     <a
       v-bind="$attrs"
       :href="href"
-      @pointerdown="onPointerDown($event, navigate)"
+      @pointerdown="navigate($event)"
       @click="onClick($event, navigate)"
     >
       <slot />
