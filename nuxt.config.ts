@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
-      titleTemplate: '%s | NuxtFaster',
+      titleTemplate: '%s',
       htmlAttrs: {
         lang: 'en',
       },
