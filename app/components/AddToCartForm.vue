@@ -13,7 +13,7 @@ async function onSubmit() {
       body: { productSlug: props.productSlug },
     });
     message.value = res.message ?? null;
-    await refreshNuxtData(["cart-badge", "cart-items", "cart-total"]);
+    await refreshNuxtData(['cart-badge', 'cart-items']);
   } finally {
     pending.value = false;
   }

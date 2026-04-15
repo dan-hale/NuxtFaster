@@ -53,7 +53,7 @@ async function onSignIn(): Promise<boolean> {
     username.value = ''
     password.value = ''
     await refreshMe()
-    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+    await refreshNuxtData(['cart-badge', 'cart-items'])
     return true
   }
   catch (e: unknown) {
@@ -83,7 +83,7 @@ async function onSignUp(): Promise<boolean> {
     username.value = ''
     password.value = ''
     await refreshMe()
-    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+    await refreshNuxtData(['cart-badge', 'cart-items'])
     return true
   }
   catch (e: unknown) {
@@ -100,7 +100,7 @@ async function onSignOut() {
   try {
     await $fetch('/api/auth/sign-out', { method: 'POST' })
     await refreshMe()
-    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+    await refreshNuxtData(['cart-badge', 'cart-items'])
   }
   finally {
     pending.value = false

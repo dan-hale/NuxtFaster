@@ -3,13 +3,8 @@ definePageMeta({ shopChrome: true, keepalive: true })
 
 useSeoMeta({ title: "NuxtFaster" });
 
-const { data: collections } = await useFetch("/api/collections", {
-  key: "collections",
-});
-
-const { data: productCount } = await useFetch("/api/product-count", {
-  key: "product-count",
-});
+const { data: collections } = await useFetch('/api/collections')
+const { data: productCount } = await useFetch('/api/product-count')
 
 </script>
 

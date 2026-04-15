@@ -2,10 +2,12 @@
 definePageMeta({ shopChrome: true, keepalive: true })
 
 const route = useRoute()
+const productSlug = computed(() => String(route.params.product))
+const subSlug = computed(() => String(route.params.subcategory))
 
-const { data: productData } = await useFetch(() => `/api/product/${route.params.product}`)
+const { data: productData } = await useFetch(() => `/api/product/${productSlug.value}`)
 
-const { data: subData } = await useFetch(() => `/api/subcategory/${route.params.subcategory}`)
+const { data: subData } = await useFetch(() => `/api/subcategory/${subSlug.value}`)
 
 const related = computed(() => {
   const list = subData.value?.products ?? []

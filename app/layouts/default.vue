@@ -5,9 +5,7 @@ const route = useRoute()
 
 const showShopSidebar = computed(() => Boolean(route.meta.shopChrome))
 
-const { data: collections } = await useFetch('/api/collections', {
-  key: 'collections',
-})
+const { data: collections } = await useFetch('/api/collections')
 </script>
 
 <template>

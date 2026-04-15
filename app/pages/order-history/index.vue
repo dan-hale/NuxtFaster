@@ -3,9 +3,7 @@ definePageMeta({ shopChrome: false });
 
 useSeoMeta({ title: "Order History" });
 
-const { data: me } = useFetch("/api/me", {
-  key: "me",
-});
+const { data: me } = await useFetch('/api/me', { key: 'me' })
 </script>
 
 <template>

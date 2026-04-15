@@ -5,14 +5,12 @@ definePageMeta({ shopChrome: false, authHeaderSsr: true })
 
 useSeoMeta({ title: 'Order' })
 
-const { data: items, refresh: refreshItems } = useFetch('/api/cart/items', {
+const { data: items, refresh: refreshItems } = await useFetch('/api/cart/items', {
   key: 'cart-items',
   default: () => [],
 })
 
-const { data: me } = useFetch('/api/me', {
-  key: 'me',
-})
+const { data: me } = await useFetch('/api/me', { key: 'me' })
 
 const total = computed(() => {
   const list = items.value ?? []
@@ -33,7 +31,7 @@ async function removeLine(productSlug: string) {
       body: { productSlug },
     })
     await refreshItems()
-    await refreshNuxtData(['cart-badge', 'cart-items', 'cart-total'])
+    await refreshNuxtData(['cart-badge', 'cart-items'])
   }
   finally {
     removing.value = null

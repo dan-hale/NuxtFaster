@@ -1,25 +1,20 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: true, keepalive: true })
 
-const route = useRoute();
-const slug = computed(() => decodeURIComponent(String(route.params.collection)));
+const route = useRoute()
+const slug = computed(() => String(route.params.collection))
 
-const { data: rows } = await useFetch(
-  () => `/api/collection/${encodeURIComponent(slug.value)}`,
-  {
-    key: () => `collection-page-${slug.value}`,
-    watch: [slug],
-    onResponseError({ response }) {
-      if (response.status === 404) {
-        showError({
-          statusCode: 404,
-          statusMessage: "Collection not found",
-          fatal: true,
-        });
-      }
-    },
+const { data: rows } = await useFetch(() => `/api/collection/${slug.value}`, {
+  onResponseError({ response }) {
+    if (response.status === 404) {
+      showError({
+        statusCode: 404,
+        statusMessage: 'Collection not found',
+        fatal: true,
+      })
+    }
   },
-);
+})
 
 useSeoMeta({
   title: () => rows.value?.[0]?.name ?? "Collection",
