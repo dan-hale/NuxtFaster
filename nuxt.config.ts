@@ -55,8 +55,13 @@ export default defineNuxtConfig({
   nitro: {
     storage: {
       cache: {
-        driver: 'redis',
+        driver: 'redis' as const,
         url: env.REDIS_URL,
+      },
+    },
+    devStorage: {
+      cache: {
+        driver: 'memory',
       },
     },
   },
