@@ -117,14 +117,17 @@ export default defineNuxtConfig({
     },
   },
 
-  /** CDN/browser cache hints for public GET APIs. Hot DB reads use Nitro `defineCachedFunction` (see server/utils/queries.ts). */
+  /**
+   * Hybrid rendering / Nitro cache (see https://nuxt.com/docs/guide/concepts/rendering#route-rules).
+   * - Public HTML on Vercel/Netlify: prefer `isr` (seconds) so responses participate in the platform CDN cache
+   *   with the same stale-while-revalidate style behavior as `swr`, but wired to edge rules.
+   * - `swr` alone is still valid for origin/full‑response caching (e.g. node-server); it does not get the same
+   *   CDN integration called out in the Nuxt docs for `isr`.
+   * - Tune the number (TTL seconds) per freshness vs cost; APIs below use explicit Cache-Control.
+   */
   routeRules: {
-    // '/': {
-    //   isr: 3600,
-    // },
-    // '/products/**': {
-    //   swr: 3600,
-    // },
+    '/': { isr: 3600 },
+    '/products/**': { isr: 3600 },
     '/api/search': {
       headers: { 'cache-control': 'public, max-age=600' },
     },
