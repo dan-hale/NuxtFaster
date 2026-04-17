@@ -20,15 +20,7 @@ useSeoMeta({
   title: () => data.value?.category?.name ?? 'Category',
 })
 
-// Register image URLs for prefetching when this page is prefetched
-usePrefetchURLs(
-  computed(() =>
-    data.value?.category?.subcollections.flatMap(sc =>
-      sc.subcategories.map(sub => sub.image_url).filter((url): url is string => !!url),
-    ) ?? [],
-  ),
-  'subcategory-images',
-)
+
 </script>
 
 <template>

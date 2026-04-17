@@ -1,82 +1,72 @@
 /**
- * Client-side plugin that listens for link:prefetch events and
- * prefetches associated image URLs stored in the target page's payload.
+ * Client-side plugin that prefetches images for routes when NuxtLink triggers prefetch.
  *
- * When NuxtLink prefetches a route, this plugin fetches that page's payload
- * to get the image URLs registered via usePrefetchURLs, then prefetches those images.
+ * Instead of fetching the full page payload, this plugin calls a lightweight
+ * /api/prefetch-urls endpoint that returns only the image URLs for a route.
+ * This is significantly more efficient than parsing the full payload.
  */
 export default defineNuxtPlugin((nuxtApp) => {
-  // Track which URLs have already been prefetched to avoid duplicates
-  const prefetchedUrls = new Set<string>()
+  // Track which images have already been prefetched
+  const prefetchedImageUrls = new Set<string>()
   // Track which routes we've already processed
   const processedRoutes = new Set<string>()
 
   nuxtApp.hook('link:prefetch', async (to) => {
-    // Normalize the path
-    const path = typeof to === 'string' ? to : to.toString()
-
-    // Skip if we've already processed this route
+    const path = normalizePath(to)
     if (processedRoutes.has(path)) return
     processedRoutes.add(path)
 
     try {
-      // Fetch the target page's payload
-      // Nuxt stores payloads at /_payload/<path>.json or similar
-      const payloadUrl = `${path}${path.endsWith('/') ? '' : '/'}__payload.json`
-
-      const response = await fetch(payloadUrl, {
+      // Fetch only the image URLs for this route (lightweight endpoint)
+      const { urls } = await $fetch<{ urls: string[] }>('/api/prefetch-urls', {
+        query: { path },
         priority: 'low',
-      } as RequestInit)
+      } as Parameters<typeof $fetch>[1])
 
-      if (!response.ok) return
+      if (urls?.length > 0) {
+        const newUrls = urls.filter(url => !prefetchedImageUrls.has(url))
+        newUrls.forEach(url => prefetchedImageUrls.add(url))
 
-      const payload = await response.json()
-      const prefetchURLs = payload?.prefetchURLs
-
-      if (!prefetchURLs || typeof prefetchURLs !== 'object') return
-
-      // Find all URL sets that match this route path
-      const matchingKeys = Object.keys(prefetchURLs).filter(key =>
-        key.startsWith(`${path}:`),
-      )
-
-      const urlsToPrefetch: string[] = []
-
-      for (const key of matchingKeys) {
-        const urls = prefetchURLs[key]
-        if (Array.isArray(urls)) {
-          for (const url of urls) {
-            if (!prefetchedUrls.has(url)) {
-              prefetchedUrls.add(url)
-              urlsToPrefetch.push(url)
-            }
-          }
+        if (newUrls.length > 0) {
+          prefetchImages(newUrls)
         }
-      }
-
-      // Prefetch images in the background
-      if (urlsToPrefetch.length > 0) {
-        prefetchImages(urlsToPrefetch)
       }
     }
     catch {
-      // Silently fail - prefetching is an optimization, not critical
+      // Silently fail - prefetching is an optimization
     }
   })
+
+  /**
+   * Normalize path for consistent comparison
+   */
+  function normalizePath(to: string | object): string {
+    const path = typeof to === 'string' ? to : (to as { path?: string }).path ?? ''
+    return path === '/' ? path : path.replace(/\/$/, '')
+  }
 })
 
 /**
  * Prefetches images using link rel="prefetch" for browser-native handling
  */
 function prefetchImages(urls: string[]) {
-  for (const url of urls) {
-    // Skip if already prefetched via link element
-    if (document.querySelector(`link[href="${url}"]`)) continue
+  const prefetch = () => {
+    for (const url of urls) {
+      if (document.querySelector(`link[href="${CSS.escape(url)}"]`)) continue
 
-    const link = document.createElement('link')
-    link.rel = 'prefetch'
-    link.as = 'image'
-    link.href = url
-    document.head.appendChild(link)
+      const link = document.createElement('link')
+      link.rel = 'prefetch'
+      link.as = 'image'
+      link.href = url
+      link.setAttribute('fetchpriority', 'low')
+      document.head.appendChild(link)
+    }
+  }
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(prefetch, { timeout: 2000 })
+  }
+  else {
+    setTimeout(prefetch, 100)
   }
 }
