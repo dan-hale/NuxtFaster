@@ -18,7 +18,17 @@ const { data: rows } = await useFetch(() => `/api/collection/${slug.value}`, {
 
 useSeoMeta({
   title: () => rows.value?.[0]?.name ?? "Collection",
-});
+})
+
+// Register image URLs for prefetching when this page is prefetched
+usePrefetchURLs(
+  computed(() =>
+    rows.value?.flatMap(c =>
+      c.categories.map(cat => cat.image_url).filter((url): url is string => !!url),
+    ) ?? [],
+  ),
+  'category-images',
+)
 </script>
 
 <template>

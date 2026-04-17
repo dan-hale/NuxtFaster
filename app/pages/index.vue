@@ -6,6 +6,16 @@ useSeoMeta({ title: "NuxtFaster" });
 const { data: collections } = await useFetch('/api/collections')
 const { data: productCount } = await useFetch('/api/product-count')
 
+// Register image URLs for prefetching when this page is prefetched
+usePrefetchURLs(
+  computed(() =>
+    collections.value?.flatMap(c =>
+      c.categories.map(cat => cat.image_url).filter((url): url is string => !!url),
+    ) ?? [],
+  ),
+  'category-images',
+)
+
 </script>
 
 <template>

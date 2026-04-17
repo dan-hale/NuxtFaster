@@ -23,6 +23,23 @@ const related = computed(() => {
 useSeoMeta({
   title: () => productData.value?.name ?? 'Product',
 })
+
+// Register image URLs for prefetching when this page is prefetched
+usePrefetchURLs(
+  computed(() => {
+    const urls: string[] = []
+    // Main product image
+    if (productData.value?.image_url) {
+      urls.push(productData.value.image_url)
+    }
+    // Related product images
+    related.value.forEach((p) => {
+      if (p.image_url) urls.push(p.image_url)
+    })
+    return urls
+  }),
+  'product-images',
+)
 </script>
 
 <template>
