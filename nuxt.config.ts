@@ -126,8 +126,8 @@ export default defineNuxtConfig({
    * - Tune the number (TTL seconds) per freshness vs cost; APIs below use explicit Cache-Control.
    */
   routeRules: {
-    '/': { isr: 3600 },
-    '/products/**': { isr: 3600 },
+    '/': { isr: 30 * 24 * 60 * 60 },
+    '/products/**': { isr: 30 * 24 * 60 * 60 },
     '/api/search': {
       headers: { 'cache-control': 'public, max-age=600' },
     },
