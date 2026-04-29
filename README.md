@@ -1,3 +1,5 @@
+## ⚠️ THE SITE IS EXPERIENCING AN OUTDATE FROM EXCEEDED FREE TIER USAGE ON NEON
+
 ## ⚠️ THIS IS A WORK IN PROGRESS, CONTRIBUTIONS ARE WELCOME
 
 **Repository:** [github.com/dan-hale/NuxtFaster](https://github.com/dan-hale/NuxtFaster)
