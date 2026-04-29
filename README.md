@@ -27,7 +27,7 @@ A performance-oriented e-commerce template built with [Nuxt](https://nuxt.com/),
 ### Deployment
 
 - Connect your deployment (e.g. Vercel) to a Neon Postgres database and Redis, and set the env vars the app expects (`DATABASE_URL` / `POSTGRES_URL`, `REDIS_URL`, etc.).
-- Apply the schema: `pnpm db:push`
+- Apply the schema: `bun db:push`
 
 ### Local development
 
@@ -35,17 +35,17 @@ A performance-oriented e-commerce template built with [Nuxt](https://nuxt.com/),
 - Install and run:
 
 ```bash
-pnpm install
-pnpm dev
+bun install
+bun dev
 ```
 
-- For Drizzle against Neon in development, ensure your connection string includes `?sslmode=required` where appropriate, then run `pnpm db:push` to sync the schema.
+- For Drizzle against Neon in development, ensure your connection string includes `?sslmode=required` where appropriate, then run `bun db:push` to sync the schema.
 
 ### Production build
 
 ```bash
-pnpm build
-pnpm preview
+bun build
+bun preview
 ```
 
 See the [Nuxt deployment docs](https://nuxt.com/docs/getting-started/deployment) for hosting options. With `VERCEL` set in the environment, Nitro uses the `vercel` preset (see `nuxt.config.ts`).
