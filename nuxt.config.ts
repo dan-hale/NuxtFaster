@@ -6,9 +6,6 @@ import tailwindcss from '@tailwindcss/vite'
 if (!env.DATABASE_URL)
   throw new Error('DATABASE_URL is not set')
 
-if (!env.REDIS_URL)
-  throw new Error('REDIS_URL is not set')
-
 export default defineNuxtConfig({
   future: {
     compatibilityVersion: 5,
@@ -84,24 +81,8 @@ export default defineNuxtConfig({
       productx2: 256,
     },
   },
-
-  nitro: {
-    storage: {
-      cache: {
-        driver: 'redis' as const,
-        url: env.REDIS_URL,
-      },
-    },
-    devStorage: {
-      cache: {
-        driver: 'memory',
-      },
-    },
-  },
-
   security: {
     rateLimiter: {
-      driver: { name: 'redis', options: { url: env.REDIS_URL } },
       tokensPerInterval: 100_000,
       interval: 15 * 60 * 1000,
       ipHeader: 'x-real-ip',
