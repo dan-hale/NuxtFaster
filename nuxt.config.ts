@@ -100,15 +100,9 @@ export default defineNuxtConfig({
 
   /**
    * Hybrid rendering / Nitro cache (see https://nuxt.com/docs/guide/concepts/rendering#route-rules).
-   * - Public HTML on Vercel/Netlify: prefer `isr` (seconds) so responses participate in the platform CDN cache
-   *   with the same stale-while-revalidate style behavior as `swr`, but wired to edge rules.
-   * - `swr` alone is still valid for origin/full‑response caching (e.g. node-server); it does not get the same
-   *   CDN integration called out in the Nuxt docs for `isr`.
-   * - Tune the number (TTL seconds) per freshness vs cost; APIs below use explicit Cache-Control.
+   * ISR disabled (CDN revalidation cost). Pages SSR on demand; APIs use explicit Cache-Control.
    */
   routeRules: {
-    '/': { isr: 30 * 24 * 60 * 60 },
-    '/products/**': { isr: 30 * 24 * 60 * 60 },
     '/api/search': {
       headers: { 'cache-control': 'public, max-age=600' },
     },
