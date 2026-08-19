@@ -39,15 +39,12 @@ async function onSignIn(): Promise<boolean> {
   pending.value = true
   error.value = null
   try {
-    const res = await $fetch('/api/auth/sign-in', {
+    const res = await $fetch<{ ok?: true, error?: string }>('/api/auth/sign-in', {
       method: 'POST',
       body: { username: username.value, password: password.value },
     })
-    if ('error' in res && res.error) {
-      error.value
-        = typeof res.error === 'string'
-          ? res.error
-          : res.error.message ?? 'Sign in failed'
+    if (res.error) {
+      error.value = res.error
       return false
     }
     username.value = ''
@@ -69,15 +66,12 @@ async function onSignUp(): Promise<boolean> {
   pending.value = true
   error.value = null
   try {
-    const res = await $fetch('/api/auth/sign-up', {
+    const res = await $fetch<{ ok?: true, error?: string }>('/api/auth/sign-up', {
       method: 'POST',
       body: { username: username.value, password: password.value },
     })
-    if ('error' in res && res.error) {
-      error.value
-        = typeof res.error === 'string'
-          ? res.error
-          : res.error.message ?? 'Sign up failed'
+    if (res.error) {
+      error.value = res.error
       return false
     }
     username.value = ''
