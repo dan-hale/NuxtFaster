@@ -1,6 +1,5 @@
 import type { H3Event } from "h3";
 import { z } from "zod";
-import { useDb } from "./db";
 
 const cartSchema = z.array(
   z.object({
@@ -39,7 +38,6 @@ export async function detailedCart(event: H3Event) {
   const cart = getCart(event);
   if (cart.length === 0) return [];
 
-  const db = useDb();
   const slugs = cart.map((item) => item.productSlug);
 
   const rows = await db.query.products.findMany({

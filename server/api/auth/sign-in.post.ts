@@ -12,7 +12,6 @@ export default defineEventHandler(async (event): Promise<{ ok: true } | { error:
     authSchema.parse(body),
   );
 
-  const db = useDb();
   const user = await db
     .select({ user: users })
     .from(users)

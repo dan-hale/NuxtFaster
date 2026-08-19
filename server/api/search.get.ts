@@ -1,4 +1,11 @@
+import { and, like, sql } from 'drizzle-orm'
 import { z } from 'zod'
+import {
+  categories,
+  products,
+  subcategories,
+  subcollections,
+} from '~~/db/schema'
 
 const searchQuerySchema = z.object({
   q: z.string().max(500).optional().default(''),
@@ -30,7 +37,35 @@ export default defineEventHandler(async (event): Promise<SearchHit[]> => {
     return []
   }
 
-  const results = await getSearchResults(searchTerm)
+  const joined = () =>
+    db
+      .select()
+      .from(products)
+      .innerJoin(
+        subcategories,
+        sql`${products.subcategory_slug} = ${subcategories.slug}`,
+      )
+      .innerJoin(
+        subcollections,
+        sql`${subcategories.subcollection_id} = ${subcollections.id}`,
+      )
+      .innerJoin(
+        categories,
+        sql`${subcollections.category_slug} = ${categories.slug}`,
+      )
+
+  const results = searchTerm.length <= 2
+    ? await joined()
+      .where(like(products.name, `${searchTerm}%`))
+      .limit(5)
+    : await joined()
+      .where(and(
+        ...searchTerm
+          .split(' ')
+          .filter(term => term.trim() !== '')
+          .map(term => like(products.name, `%${term}%`)),
+      ))
+      .limit(5)
 
   const searchResults = results.map((raw) => {
     const row = raw as Record<string, unknown>

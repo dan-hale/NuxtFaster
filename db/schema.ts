@@ -1,155 +1,100 @@
-import { sql } from "drizzle-orm";
 import {
   index,
   integer,
   numeric,
-  pgTable,
-  serial,
+  sqliteTable,
   text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+} from "drizzle-orm/sqlite-core";
 
-export const collections = pgTable("collections", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  slug: text("slug").notNull(),
+export const collections = sqliteTable("collections", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  slug: text().notNull(),
 });
 
 export type Collection = typeof collections.$inferSelect;
 
-export const categories = pgTable(
+export const categories = sqliteTable(
   "categories",
   {
-    slug: text("slug").notNull().primaryKey(),
-    name: text("name").notNull(),
-    collection_id: integer("collection_id")
+    slug: text().notNull().primaryKey(),
+    name: text().notNull(),
+    collection_id: integer()
       .notNull()
       .references(() => collections.id, { onDelete: "cascade" }),
-    image_url: text("image_url"),
+    image_url: text(),
   },
-  (table) => ({
-    collectionIdIdx: index("categories_collection_id_idx").on(
-      table.collection_id,
-    ),
-  }),
+  (table) => [
+    index("categories_collection_id_idx").on(table.collection_id),
+  ],
 );
 
 export type Category = typeof categories.$inferSelect;
 
-export const subcollections = pgTable(
+export const subcollections = sqliteTable(
   "subcollections",
   {
-    id: serial("id").primaryKey(),
-    name: text("name").notNull(),
-    category_slug: text("category_slug")
+    id: integer().primaryKey({ autoIncrement: true }),
+    name: text().notNull(),
+    category_slug: text()
       .notNull()
       .references(() => categories.slug, { onDelete: "cascade" }),
   },
-  (table) => ({
-    categorySlugIdx: index("subcollections_category_slug_idx").on(
-      table.category_slug,
-    ),
-  }),
+  (table) => [
+    index("subcollections_category_slug_idx").on(table.category_slug),
+  ],
 );
 
 export type Subcollection = typeof subcollections.$inferSelect;
 
-export const subcategories = pgTable(
+export const subcategories = sqliteTable(
   "subcategories",
   {
-    slug: text("slug").notNull().primaryKey(),
-    name: text("name").notNull(),
-    subcollection_id: integer("subcollection_id")
+    slug: text().notNull().primaryKey(),
+    name: text().notNull(),
+    subcollection_id: integer()
       .notNull()
       .references(() => subcollections.id, { onDelete: "cascade" }),
-    image_url: text("image_url"),
+    image_url: text(),
   },
-  (table) => ({
-    subcollectionIdIdx: index("subcategories_subcollection_id_idx").on(
-      table.subcollection_id,
-    ),
-  }),
+  (table) => [
+    index("subcategories_subcollection_id_idx").on(table.subcollection_id),
+  ],
 );
 
 export type Subcategory = typeof subcategories.$inferSelect;
 
-export const products = pgTable(
+export const products = sqliteTable(
   "products",
   {
-    slug: text("slug").notNull().primaryKey(),
-    name: text("name").notNull(),
-    description: text("description").notNull(),
-    price: numeric("price").notNull(),
-    subcategory_slug: text("subcategory_slug")
+    slug: text().notNull().primaryKey(),
+    name: text().notNull(),
+    description: text().notNull(),
+    price: numeric({ mode: "string" }).notNull(),
+    subcategory_slug: text()
       .notNull()
       .references(() => subcategories.slug, { onDelete: "cascade" }),
-    image_url: text("image_url"),
+    image_url: text(),
   },
-  (table) => ({
-    nameSearchIndex: index("name_search_index").using(
-      "gin",
-      sql`to_tsvector('english', ${table.name})`,
-    ),
-    nameTrgmIndex: index("name_trgm_index")
-      .using("gin", sql`${table.name} gin_trgm_ops`)
-      .concurrently(),
-    subcategorySlugIdx: index("products_subcategory_slug_idx").on(
-      table.subcategory_slug,
-    ),
-  }),
+  (table) => [
+    index("products_name_idx").on(table.name),
+    index("products_subcategory_slug_idx").on(table.subcategory_slug),
+  ],
 );
 
 export type Product = typeof products.$inferSelect;
 
-export const collectionsRelations = relations(collections, ({ many }) => ({
-  categories: many(categories),
-}));
-
-export const categoriesRelations = relations(categories, ({ one, many }) => ({
-  collection: one(collections, {
-    fields: [categories.collection_id],
-    references: [collections.id],
-  }),
-  subcollections: many(subcollections),
-}));
-
-export const subcollectionRelations = relations(
-  subcollections,
-  ({ one, many }) => ({
-    category: one(categories, {
-      fields: [subcollections.category_slug],
-      references: [categories.slug],
-    }),
-    subcategories: many(subcategories),
-  }),
-);
-
-export const subcategoriesRelations = relations(
-  subcategories,
-  ({ one, many }) => ({
-    subcollection: one(subcollections, {
-      fields: [subcategories.subcollection_id],
-      references: [subcollections.id],
-    }),
-    products: many(products),
-  }),
-);
-
-export const productsRelations = relations(products, ({ one }) => ({
-  subcategory: one(subcategories, {
-    fields: [products.subcategory_slug],
-    references: [subcategories.slug],
-  }),
-}));
-
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: varchar("username", { length: 100 }).notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+export const users = sqliteTable("users", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  username: text().notNull().unique(),
+  passwordHash: text().notNull(),
+  createdAt: integer({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date()),
 });
 
 export type User = typeof users.$inferSelect;

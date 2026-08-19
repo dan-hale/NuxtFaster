@@ -1,14 +1,17 @@
 import { env } from 'node:process'
-import { neon } from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-http'
-import * as schema from '~~/db/schema'
+import { drizzle } from 'drizzle-orm/libsql'
+import { relations } from '~~/db/relations'
 
-if (!env.DATABASE_URL)
-  throw new Error('POSTGRES_URL is not set')
+const { TURSO_DATABASE_URL, TURSO_AUTH_TOKEN } = env
+if (!TURSO_DATABASE_URL)
+  throw new Error('TURSO_DATABASE_URL is required')
+if (!TURSO_AUTH_TOKEN)
+  throw new Error('TURSO_AUTH_TOKEN is required')
 
-const sql = neon(env.DATABASE_URL)
-const dbInstance = drizzle({ client: sql, schema })
-
-export function useDb() {
-  return dbInstance
-}
+export const db = drizzle({
+  connection: {
+    url: TURSO_DATABASE_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
+  },
+  relations,
+})
