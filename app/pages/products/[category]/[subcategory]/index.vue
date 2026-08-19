@@ -16,9 +16,24 @@ const { data } = await useFetch(() => `/api/subcategory/${subSlug.value}`, {
   },
 })
 
+const title = computed(() => data.value?.subcategory?.name ?? 'Products')
+const description = computed(() => {
+  const name = data.value?.subcategory?.name
+  return name ? `Shop ${name} at NuxtFaster.` : 'Browse a subcategory at NuxtFaster.'
+})
+
 useSeoMeta({
-  title: () => data.value?.subcategory?.name ?? "Products",
-});
+  title,
+  description,
+  ogTitle: title,
+  ogDescription: description,
+})
+
+defineOgImage('ShopCard', {
+  title: title.value,
+  description: description.value,
+  image: data.value?.subcategory?.image_url,
+})
 </script>
 
 <template>

@@ -20,8 +20,20 @@ const related = computed(() => {
   return [...list.slice(idx + 1), ...list.slice(0, idx)]
 })
 
+const title = computed(() => productData.value?.name ?? 'Product')
+const description = computed(() => productData.value?.description ?? '')
+
 useSeoMeta({
-  title: () => productData.value?.name ?? 'Product',
+  title,
+  description,
+  ogTitle: title,
+  ogDescription: description,
+})
+
+defineOgImage('ShopCard', {
+  title: title.value,
+  description: description.value,
+  image: productData.value?.image_url,
 })
 </script>
 

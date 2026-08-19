@@ -16,12 +16,23 @@ const { data } = await useFetch(() => `/api/category/${slug.value}`, {
   },
 })
 
+const title = computed(() => data.value?.category?.name ?? 'Category')
+const description = computed(() => {
+  const name = data.value?.category?.name
+  return name ? `Shop ${name} at NuxtFaster.` : 'Browse a category at NuxtFaster.'
+})
+
 useSeoMeta({
-  title: () => data.value?.category?.name ?? 'Category',
-  description: () => {
-    const name = data.value?.category?.name
-    return name ? `Shop ${name} at NuxtFaster.` : 'Browse a category at NuxtFaster.'
-  },
+  title,
+  description,
+  ogTitle: title,
+  ogDescription: description,
+})
+
+defineOgImage('ShopCard', {
+  title: title.value,
+  description: description.value,
+  image: data.value?.category?.image_url,
 })
 </script>
 

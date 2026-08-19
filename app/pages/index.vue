@@ -1,13 +1,24 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: true, keepalive: true })
 
-useSeoMeta({
-  title: 'NuxtFaster',
-  description: 'A performant site built with Nuxt',
-})
+const siteTitle = 'NuxtFaster'
+const siteDescription = 'A performant site built with Nuxt'
 
 const { data: collections } = await useFetch('/api/collections')
 const { data: productCount } = await useFetch('/api/product-count')
+
+useSeoMeta({
+  title: siteTitle,
+  description: siteDescription,
+  ogTitle: siteTitle,
+  ogDescription: siteDescription,
+})
+
+defineOgImage('ShopCard', {
+  title: siteTitle,
+  description: siteDescription,
+  image: collections.value?.[0]?.categories?.[0]?.image_url,
+})
 
 </script>
 

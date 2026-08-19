@@ -16,12 +16,23 @@ const { data: rows } = await useFetch(() => `/api/collection/${slug.value}`, {
   },
 })
 
+const title = computed(() => rows.value?.[0]?.name ?? 'Collection')
+const description = computed(() => {
+  const name = rows.value?.[0]?.name
+  return name ? `Shop ${name} at NuxtFaster.` : 'Browse a collection at NuxtFaster.'
+})
+
 useSeoMeta({
-  title: () => rows.value?.[0]?.name ?? 'Collection',
-  description: () => {
-    const name = rows.value?.[0]?.name
-    return name ? `Shop ${name} at NuxtFaster.` : 'Browse a collection at NuxtFaster.'
-  },
+  title,
+  description,
+  ogTitle: title,
+  ogDescription: description,
+})
+
+defineOgImage('ShopCard', {
+  title: title.value,
+  description: description.value,
+  image: rows.value?.[0]?.categories?.[0]?.image_url,
 })
 </script>
 
