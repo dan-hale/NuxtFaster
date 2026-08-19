@@ -17,8 +17,12 @@ const { data: rows } = await useFetch(() => `/api/collection/${slug.value}`, {
 })
 
 useSeoMeta({
-  title: () => rows.value?.[0]?.name ?? "Collection",
-});
+  title: () => rows.value?.[0]?.name ?? 'Collection',
+  description: () => {
+    const name = rows.value?.[0]?.name
+    return name ? `Shop ${name} at NuxtFaster.` : 'Browse a collection at NuxtFaster.'
+  },
+})
 </script>
 
 <template>
