@@ -43,7 +43,7 @@ export async function detailedCart(event: H3Event) {
   const slugs = cart.map((item) => item.productSlug);
 
   const rows = await db.query.products.findMany({
-    where: (p, { inArray }) => inArray(p.slug, slugs),
+    where: { slug: { in: slugs } },
     with: {
       subcategory: {
         with: {
