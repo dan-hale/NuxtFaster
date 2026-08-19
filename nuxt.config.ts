@@ -3,8 +3,8 @@ import { env } from 'node:process'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from '@tailwindcss/vite'
 
-if (!env.DATABASE_URL)
-  throw new Error('DATABASE_URL is not set')
+if (!env.TURSO_DATABASE_URL)
+  throw new Error('TURSO_DATABASE_URL is not set')
 
 export default defineNuxtConfig({
   future: {
@@ -31,13 +31,9 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-security',
     '@nuxt/hints',
-    'nuxt-booster',
     '@nuxt/fonts',
   ],
 
-  booster: {
-    disableNuxtFontaine: true,
-  },
   fonts: {
     provider: 'google',
     defaults: {
@@ -67,6 +63,17 @@ export default defineNuxtConfig({
     name: 'NuxtFaster',
     description: 'A performant site built with Nuxt',
     defaultLocale: 'en',
+  },
+
+  ogImage: {
+    enabled: false,
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: 'NuxtFaster',
+    },
   },
 
   image: {
@@ -100,14 +107,59 @@ export default defineNuxtConfig({
 
   /**
    * Hybrid rendering / Nitro cache (see https://nuxt.com/docs/guide/concepts/rendering#route-rules).
-   * ISR disabled (CDN revalidation cost). Pages SSR on demand; APIs use explicit Cache-Control.
+   * ISR disabled (CDN revalidation cost). Public pages/APIs: Cache-Control; private routes: no-store.
    */
   routeRules: {
-    '/api/search': {
-      headers: { 'cache-control': 'public, max-age=600' },
+    '/**': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
     },
-    '/api/prefetch-images/**': {
-      headers: { 'cache-control': 'public, max-age=3600' },
+    '/api/search': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/api/collections': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/api/collection/**': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/api/category/**': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/api/subcategory/**': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/api/product/**': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/api/product-count': {
+      headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
+    },
+    '/order': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/order/**': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/order-history': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/order-history/**': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/scan': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/scan/**': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/api/auth/**': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/api/me': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/api/cart/**': {
+      headers: { 'cache-control': 'private, no-store' },
     },
     '/api/auth/sign-in': {
       security: {
@@ -122,7 +174,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    databaseUrl: env.DATABASE_URL,
+    databaseUrl: env.TURSO_DATABASE_URL,
     public: {
       siteUrl: env.VERCEL_URL,
     },
@@ -130,5 +182,11 @@ export default defineNuxtConfig({
 
   robots: {
     blockNonSeoBots: true,
+    groups: [
+      {
+        userAgent: '*',
+        disallow: ['/products', '/api', '/order', '/order-history', '/scan'],
+      },
+    ],
   },
 })
