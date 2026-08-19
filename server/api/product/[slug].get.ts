@@ -1,4 +1,4 @@
-export default defineCachedEventHandler(
+export default defineEventHandler(
   async (event) => {
     const slug = getRouterParam(event, "slug");
     if (!slug) {
@@ -10,5 +10,4 @@ export default defineCachedEventHandler(
     }
     return product;
   },
-  { maxAge: 60, swr: true, name: "api-product" },
 );

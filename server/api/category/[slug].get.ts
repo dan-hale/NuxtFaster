@@ -1,4 +1,4 @@
-export default defineCachedEventHandler(
+export default defineEventHandler(
   async (event) => {
     const slug = getRouterParam(event, "slug");
     if (!slug) {
@@ -15,5 +15,4 @@ export default defineCachedEventHandler(
     const count = typeof c === "bigint" ? Number(c) : Number(c ?? 0);
     return { category, count };
   },
-  { maxAge: 60, swr: true, name: "api-category" },
 );

@@ -7,7 +7,7 @@ const authSchema = z.object({
   password: z.string().min(1),
 });
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<{ ok: true } | { error: string }> => {
   const { username, password } = await readValidatedBody(event, (body) =>
     authSchema.parse(body),
   );
@@ -34,4 +34,4 @@ export default defineEventHandler(async (event) => {
     loggedInAt: new Date(),
   });
   return { ok: true };
-});
+}); 
