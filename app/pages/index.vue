@@ -1,7 +1,10 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: true, keepalive: true })
 
-useSeoMeta({ title: "NuxtFaster" });
+useSeoMeta({
+  title: 'NuxtFaster',
+  description: 'A performant site built with Nuxt',
+})
 
 const { data: collections } = await useFetch('/api/collections')
 const { data: productCount } = await useFetch('/api/product-count')
@@ -15,7 +18,7 @@ const { data: productCount } = await useFetch('/api/product-count')
     >
       Explore {{ (productCount ?? 0).toLocaleString() }} products
     </div>
-    <div v-for="collection in collections ?? []" :key="collection.name">
+    <div v-for="(collection, collectionIdx) in collections ?? []" :key="collection.name">
       <h2 class="text-xl font-semibold">
         {{ collection.name }}
       </h2>
@@ -23,16 +26,16 @@ const { data: productCount } = await useFetch('/api/product-count')
         class="flex flex-row flex-wrap justify-center gap-2 border-b-2 py-4 sm:justify-start"
       >
         <AppLink
-          v-for="category in collection.categories"
+          v-for="(category, categoryIdx) in collection.categories"
           :key="category.name"
           class="flex w-[125px] flex-col items-center text-center"
           :to="`/products/${category.slug}`"
         >
           <NuxtImg
-            loading="lazy"
+            :loading="collectionIdx === 0 && categoryIdx === 0 ? 'eager' : 'lazy'"
             decoding="sync"
             :placeholder="NuxtImgPlaceholderDefault"
-            preload
+            :preload="collectionIdx === 0 && categoryIdx === 0"
             :src="category.image_url ?? '/placeholder.svg'"
             :alt="`A small picture of ${category.name}`"
             class="mb-2 h-14 w-14 border hover:bg-accent2"
