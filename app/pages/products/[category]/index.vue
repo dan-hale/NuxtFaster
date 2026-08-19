@@ -18,6 +18,10 @@ const { data } = await useFetch(() => `/api/category/${slug.value}`, {
 
 useSeoMeta({
   title: () => data.value?.category?.name ?? 'Category',
+  description: () => {
+    const name = data.value?.category?.name
+    return name ? `Shop ${name} at NuxtFaster.` : 'Browse a category at NuxtFaster.'
+  },
 })
 </script>
 
