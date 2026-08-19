@@ -34,9 +34,9 @@ useSeoMeta({
     </p>
     <div class="flex flex-row flex-wrap gap-2">
       <ProductLink
-        v-for="product in data.products"
+        v-for="(product, i) in data.products"
         :key="product.slug"
-        loading="eager"
+        :loading="i < 4 ? 'eager' : 'lazy'"
         :product="product"
         :category-slug="String(route.params.category)"
         :subcategory-slug="String(route.params.subcategory)"
