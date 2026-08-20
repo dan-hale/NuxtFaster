@@ -12,6 +12,7 @@ useSeoMeta({
   description: siteDescription,
   ogTitle: siteTitle,
   ogDescription: siteDescription,
+  robots: 'index, follow',
 })
 
 defineOgImage('ShopCard', {

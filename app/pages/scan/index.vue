@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: false });
 
-useSeoMeta({ title: "Scan" });
+useSeoMeta({ title: "Scan", robots: "noindex, nofollow" });
 </script>
 
 <template>

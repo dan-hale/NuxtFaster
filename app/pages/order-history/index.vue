@@ -1,9 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ shopChrome: false });
 
-useSeoMeta({ title: "Order History" });
+useSeoMeta({ title: "Order History", robots: "noindex, nofollow" });
 
-const { data: me } = await useFetch('/api/me', { key: 'me' })
+const { data: me } = useFetch('/api/me', { key: 'me', server: false })
 </script>
 
 <template>

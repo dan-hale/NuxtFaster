@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { X } from 'lucide-vue-next'
 
-definePageMeta({ shopChrome: false, authHeaderSsr: true })
+definePageMeta({ shopChrome: false })
 
-useSeoMeta({ title: 'Order' })
+useSeoMeta({ title: 'Order', robots: 'noindex, nofollow' })
 
 const { data: items, refresh: refreshItems } = await useFetch('/api/cart/items', {
   key: 'cart-items',
   default: () => [],
 })
 
-const { data: me } = await useFetch('/api/me', { key: 'me' })
+const { data: me } = useFetch('/api/me', { key: 'me', server: false })
 
 const total = computed(() => {
   const list = items.value ?? []

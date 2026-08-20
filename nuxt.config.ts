@@ -3,9 +3,6 @@ import { env } from 'node:process'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from '@tailwindcss/vite'
 
-if (!env.TURSO_DATABASE_URL)
-  throw new Error('TURSO_DATABASE_URL is not set')
-
 export default defineNuxtConfig({
   future: {
     compatibilityVersion: 5,
@@ -66,7 +63,18 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    enabled: false,
+    defaults: {
+      cacheMaxAgeSeconds: 60 * 60 * 24 * 3,
+    },
+    compatibility: {
+      prerender: {
+        browser: false,
+      },
+    },
+  },
+
+  sitemap: {
+    include: ['/'],
   },
 
   schemaOrg: {
@@ -173,19 +181,20 @@ export default defineNuxtConfig({
     },
   },
 
-  runtimeConfig: {
-    databaseUrl: env.TURSO_DATABASE_URL,
-    public: {
-      siteUrl: env.VERCEL_URL,
-    },
-  },
 
   robots: {
     blockNonSeoBots: true,
+    blockAiBots: true,
     groups: [
       {
         userAgent: '*',
+        allow: ['/_og', '/__og-image__'],
         disallow: ['/products', '/api', '/order', '/order-history', '/scan'],
+      },
+      {
+        userAgent: ['facebookexternalhit', 'Twitterbot', 'Slackbot', 'LinkedInBot'],
+        allow: ['/products', '/_og', '/__og-image__'],
+        disallow: ['/api', '/order', '/order-history', '/scan'],
       },
     ],
   },
