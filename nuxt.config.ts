@@ -1,3 +1,4 @@
+/// <reference path="./types/robots-nitro.d.ts" />
 import { env } from 'node:process'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -121,6 +122,24 @@ export default defineNuxtConfig({
     '/**': {
       headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
     },
+    '/': {
+      robots: true,
+    },
+    '/products/**': {
+      robots: false,
+    },
+    '/_og/**': {
+      headers: { 'cache-control': 'public, max-age=259200, s-maxage=259200, stale-while-revalidate=86400' },
+    },
+    '/_og/d/**': {
+      headers: { 'cache-control': 'public, max-age=259200, s-maxage=259200, stale-while-revalidate=86400' },
+    },
+    '/_og/r/**': {
+      headers: { 'cache-control': 'public, max-age=259200, s-maxage=259200, stale-while-revalidate=86400' },
+    },
+    '/__og-image__/**': {
+      headers: { 'cache-control': 'public, max-age=259200, s-maxage=259200, stale-while-revalidate=86400' },
+    },
     '/api/search': {
       headers: { 'cache-control': 'public, max-age=7200, s-maxage=7200, stale-while-revalidate=86400' },
     },
@@ -144,26 +163,35 @@ export default defineNuxtConfig({
     },
     '/order': {
       headers: { 'cache-control': 'private, no-store' },
+      robots: false,
     },
     '/order/**': {
       headers: { 'cache-control': 'private, no-store' },
+      robots: false,
     },
     '/order-history': {
       headers: { 'cache-control': 'private, no-store' },
+      robots: false,
     },
     '/order-history/**': {
       headers: { 'cache-control': 'private, no-store' },
+      robots: false,
     },
     '/scan': {
       headers: { 'cache-control': 'private, no-store' },
+      robots: false,
     },
     '/scan/**': {
       headers: { 'cache-control': 'private, no-store' },
+      robots: false,
     },
     '/api/auth/**': {
       headers: { 'cache-control': 'private, no-store' },
     },
     '/api/me': {
+      headers: { 'cache-control': 'private, no-store' },
+    },
+    '/api/_auth/**': {
       headers: { 'cache-control': 'private, no-store' },
     },
     '/api/cart/**': {
