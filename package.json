@@ -22,7 +22,7 @@
     "@takumi-rs/core": "^2.10.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "@vueuse/nuxt": "^14.2.1",
+    "@vueuse/nuxt": "^14.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^1.0.0-rc.4",
