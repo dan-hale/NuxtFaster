@@ -32,7 +32,7 @@
     "nuxt-security": "^2.5.1",
     "reka-ui": "^2.10.4",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.3.3",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.5.32",
     "vue-router": "^5.0.4",
