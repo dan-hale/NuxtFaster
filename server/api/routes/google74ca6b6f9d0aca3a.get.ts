@@ -1,0 +1,3 @@
+export default defineEventHandler(() => {
+  return "google-site-verification: google74ca6b6f9d0aca3a.html"
+})
