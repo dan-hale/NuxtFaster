@@ -16,7 +16,7 @@
     "@nuxt/eslint": "1.15.2",
     "@nuxt/fonts": "0.14.0",
     "@nuxt/hints": "1.0.3",
-    "@nuxt/image": "2.0.0",
+    "@nuxt/image": "2.1.0",
     "@nuxtjs/seo": "^5.3.14",
     "@tailwindcss/vite": "^4.3.3",
     "@takumi-rs/core": "^2.10.0",
